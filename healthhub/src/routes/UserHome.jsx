@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-// import UrlForm from '../components/UrlForm';
+import BPForm from '../components/BPform';
 import axios from "axios";
 import styled from 'styled-components';
 
@@ -7,7 +7,7 @@ const OuterWrapper = styled.div`
     display: flex;
     margin: 30px auto;
     
-    .urlList {
+    .BPList {
         width: 60%;
     }
 `
@@ -15,9 +15,8 @@ const OuterWrapper = styled.div`
 // Define the Login function.
 export const UserHome = () => {
     const [bps, setBps] = useState([]);
+    const [userInfo, setUserInfo] = useState([]);
 
-    // const user_id = localStorage.getItem('user_id');
-    // const first_name = localStorage.getItem('first_name')
     const token = localStorage.getItem('access_token');
 
     useEffect(() => {
@@ -25,22 +24,35 @@ export const UserHome = () => {
             window.location.href = '/login'
         }
         else {
-            (async () => {
+            async function getUserData() {
                 try {
-                    await axios.get(`http://127.0.0.1:8000/medprob/bps/`, 
-                        {headers: 
+                    await axios.get('http://127.0.0.1:8000/accounts/login/', 
+                        { headers: 
                             {'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json'}
-                        },
-                        // {params: 
-                        //     { user: user_id }
-                        // }
-                        )
+                            'Content-Type': 'application/json'} })
+                        .then(response => {
+                            console.log(response.data);
+                            setUserInfo(response.data);
+                        })
+                } catch (e) {
+                    console.error(e)
+                }
+            }
+
+            async function getBPData() {
+                try {
+                    await axios.get('http://127.0.0.1:8000/medprob/bps/', 
+                        { headers: 
+                            {'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'} })
                         .then(response => setBps(response.data));
                 } catch (e) {
-                    console.log(e, 'not authorized')
+                    console.error(e)
                 }
-            })()
+            }
+
+            getUserData();
+            getBPData();
         };
     }, []);
 
@@ -48,18 +60,17 @@ export const UserHome = () => {
         <>
             <OuterWrapper>
                 <div className="BPList">
-                    {/* <h3>{first_name}'s Url List</h3> */}
+                    <h3>{userInfo.first_name}'s BP List</h3>
                     {bps?.map((bp, index) => (
                         <ul key={index}>
-                            <li>{bp.systolic}</li>
-                            <li>{bp.diastolic}</li>
+                            <li>{bp.systolic}/{bp.diastolic}</li>
                             <li>{bp.date}</li>
                             <li>{bp.time}</li>
                             <li>{bp.user}</li>
                         </ul>
                     ))}
                 </div> 
-                {/* <UrlForm /> */}
+                <BPForm />
             </OuterWrapper>
         </>
     )

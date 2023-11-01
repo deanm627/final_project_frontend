@@ -24,9 +24,6 @@ export default function Register() {
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
 
-    // const user_id = localStorage.getItem('user_id');
-    // const token = localStorage.getItem('access_token');
-
     const submit = async e => {
         e.preventDefault();
 
@@ -38,16 +35,16 @@ export default function Register() {
         bodyFormData.append('email', email);
 
         // Create the POST requuest
-        const {data} = await                                                                            
-                       axios.post('https://ccs-url-shortener-fxgk.onrender.com/register/',
+        await axios.post('http://127.0.0.1:8000/accounts/register/',
                        bodyFormData, 
                        {headers: 
                             {'Content-Type': 'multipart/form-data'}
                        },
-                       {withCredentials: true});
+                       {withCredentials: true})
+                       .then(response => console.log(response));
 
        // Redirect after submission.      
-       window.location.href = '/login'
+    //    window.location.href = '/login'
    }
 
     return (
@@ -68,6 +65,13 @@ export default function Register() {
                         value={lastName} 
                         required
                         onChange={e => setLastName(e.target.value)}/>
+                    <label>Email:</label>
+                    <input 
+                        type='email' 
+                        name="email"
+                        value={email} 
+                        required
+                        onChange={e => setEmail(e.target.value)}/>
                     <label>Username:</label>
                     <input 
                         type='username' 
@@ -82,13 +86,6 @@ export default function Register() {
                         value={password} 
                         required
                         onChange={e => setPassword(e.target.value)}/>
-                    <label>Email:</label>
-                    <input 
-                        type='email' 
-                        name="email"
-                        value={email} 
-                        required
-                        onChange={e => setEmail(e.target.value)}/>
                     <button type='submit'>Submit</button>
                 </FormWrapper>
          </form>
