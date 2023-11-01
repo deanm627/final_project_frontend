@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import axios from "axios";
 import styled from 'styled-components';
 
@@ -15,6 +16,14 @@ const FormWrapper = styled.div`
         margin: 15px 0;
         width: 50%;
     }
+
+    .success {
+        color: green;
+    }
+
+    .failure {
+        color: red;
+    }
 `
 
 export default function Register() {
@@ -23,6 +32,8 @@ export default function Register() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
+    const [status, setStatus] = useState('');
+    const [reason, setReason] = useState('');
 
     const submit = async e => {
         e.preventDefault();
@@ -41,7 +52,18 @@ export default function Register() {
                             {'Content-Type': 'multipart/form-data'}
                        },
                        {withCredentials: true})
-                       .then(response => console.log(response));
+                       .then(response => {
+                        console.log(response)
+                        setStatus(response.status)
+                        setReason(response.data)
+                        if (response.status == 201) {
+                            setFirstName('')
+                            setLastName('')
+                            setUsername('')
+                            setPassword('')
+                            setEmail('')
+                        } 
+                       });
 
        // Redirect after submission.      
     //    window.location.href = '/login'
@@ -87,6 +109,13 @@ export default function Register() {
                         required
                         onChange={e => setPassword(e.target.value)}/>
                     <button type='submit'>Submit</button>
+                    { status == 201  
+                        ? <p className='success'>User successfully created. <br></br> 
+                           Please <Link to="/login">login</Link>
+                          </p> 
+                        : null}
+                    { status == 400 ? 
+                        <p className='failure'>{reason}</p> : null}
                 </FormWrapper>
          </form>
     )

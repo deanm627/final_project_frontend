@@ -29,7 +29,7 @@ export default function UrlForm() {
     const [diastolic, setDiastolic] = useState('');
     const [date, setDate] = useState('');
     const [time, setTime] = useState('');
-    const [requestStatus, setRequestStatus] = useState('');
+    const [status, setStatus] = useState('');
 
     const token = localStorage.getItem('access_token');
 
@@ -49,12 +49,21 @@ export default function UrlForm() {
                             'Content-Type': 'multipart/form-data'}
                        },
                        {withCredentials: true})
-                       .then(response => setRequestStatus(response.status));
+                       .then(response => {
+                        setStatus(response.status)
+                        if (response.status == 201) {
+                            setSystolic('')
+                            setDiastolic('')
+                            setDate('')
+                            setTime('')
+                        } 
+                       });
 
        // Redirect after submission.      
     //    window.location.href = '/userhome'
+        
+        
     }
-
 
     return (
         <form className="BPForm" onSubmit={submit}>
@@ -89,12 +98,10 @@ export default function UrlForm() {
                         value={time} 
                         onChange={e => setTime(e.target.value)}/>
                     <button type='submit'>Submit</button>
-                    {/* {requestStatus 
-                        ?   {requestStatus == 201 
-                            ?   <p className='success'>BP reading successfully saved</p>
-                            :   <p className='failure'>There was an error</p>}
-                        :   null
-                    } */}
+                    { status == 201 ? 
+                        <p className='success'>Success</p> : null}
+                    { status == 400 ? 
+                        <p className='failure'>Failed</p> : null}
                 </FormWrapper>
          </form>
     )
