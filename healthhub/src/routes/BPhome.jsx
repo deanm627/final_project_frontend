@@ -6,15 +6,43 @@ import styled from 'styled-components';
 
 const OuterWrapper = styled.div`
     display: flex;
+    justify-content: center;
+    align-items: center;
     margin: 30px auto;
-    
-    .BPList {
-        width: 60%;
+
+    h3 {
+        font-size: 2rem;
+    }
+
+    .display {
+        border: 1px solid white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 5rem;
+        padding: 15px;
+    }
+
+    p {
+        margin: 0;
+        padding: 0;
+    }
+
+    .line {
+        font-weight: 800;
+    }
+
+    .valueSys {
+        border-bottom: 4px solid rgba(255, 255, 255, 0.87);
+        
     }
 `
 
-export const UserHome = () => {
-    const [bps, setBps] = useState([]);
+export const BPHome = () => {
+    const [bpSys, setBpSys] = useState([]);
+    const [bpDia, setBpDia] = useState([]);
+    const [count, setCount] = useState([]);
+    const [oldestDate, setOldestDate] = useState([]);
     const [userInfo, setUserInfo] = useState([]);
 
     const token = localStorage.getItem('access_token');
@@ -41,13 +69,16 @@ export const UserHome = () => {
 
             async function getBPData() {
                 try {
-                    await axios.get('http://127.0.0.1:8000/medprob/bps/', 
+                    await axios.get('http://127.0.0.1:8000/medprob/bp/', 
                         { headers: 
                             {'Authorization': `Bearer ${token}`,
                             'Content-Type': 'application/json'} })
                         .then(response => {
                             console.log(response);
-                            setBps(response.data)
+                            setBpSys(Math.round(response.data['systolic__avg']));
+                            setBpDia(Math.round(response.data['diastolic__avg']));
+                            setCount(response.data['count']);
+                            setOldestDate(response.data['date__min']);
                         });
                 } catch (e) {
                     console.error(e)
@@ -62,17 +93,17 @@ export const UserHome = () => {
     return (
         <>
             <OuterWrapper>
-                <div className="BPList">
-                    <h3>{userInfo.first_name}'s BP List</h3>
-                    {bps?.map((bp, index) => (
-                        <ul key={index}>
-                            <li>{bp.systolic}/{bp.diastolic}</li>
-                            <Link to={`/medprob/bps/${bp.id}`}><li>{bp.date}</li><li>{bp.time}</li></Link>
-                            <li>{bp.user}</li>
-                        </ul>
-                    ))}
+                <div className="BPHome">
+                    <h3>{userInfo.first_name}'s Blood Pressure</h3>
+                    <div className="display">
+                        <p className='valueSys'>{bpSys}</p>
+                        <p className='valueDia'>{bpDia}</p>
+                    </div>
+                    <div>
+                        <p>Average BP calculated from <strong>{count}</strong> values since <strong>{oldestDate}</strong></p>
+                    </div>
                 </div> 
-                <BPForm />
+                {/* <BPForm /> */}
             </OuterWrapper>
         </>
     )

@@ -42,7 +42,7 @@ export default function UrlForm() {
         bodyFormData.append('date', date);
         bodyFormData.append('time', time);
 
-        // Create the POST requuest
+        // Create the POST request
         await axios.post('http://127.0.0.1:8000/medprob/bps/', bodyFormData, 
                        {headers: 
                             {'Authorization': `Bearer ${token}`,
@@ -50,13 +50,15 @@ export default function UrlForm() {
                        },
                        {withCredentials: true})
                        .then(response => {
-                        setStatus(response.status)
+                        console.log(response)
                         if (response.status == 201) {
-                            setSystolic('')
-                            setDiastolic('')
-                            setDate('')
-                            setTime('')
-                        } 
+                            setStatus(response.status)
+                            setTimeout(() => { 
+                                window.location.reload()
+                            }, 2000);
+                        } else {
+                            setStatus(response.response.status)
+                        }
                        });
 
        // Redirect after submission.      
@@ -99,9 +101,9 @@ export default function UrlForm() {
                         onChange={e => setTime(e.target.value)}/>
                     <button type='submit'>Submit</button>
                     { status == 201 ? 
-                        <p className='success'>Success</p> : null}
+                        <p className='success'>BP reading successfully entered.</p> : null}
                     { status == 400 ? 
-                        <p className='failure'>Failed</p> : null}
+                        <p className='failure'>An error occured.</p> : null}
                 </FormWrapper>
          </form>
     )

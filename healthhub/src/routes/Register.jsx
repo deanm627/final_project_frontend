@@ -60,10 +60,10 @@ export default function Register() {
                             setUsername('')
                             setPassword('')
                             setEmail('')
-                            setStatus(201)
+                            setStatus(response.status)
                         } else {
-                            setStatus(response.response.status)
                             setReason(response.response.data)
+                            setStatus(response.response.status)
                         }
                        });
 

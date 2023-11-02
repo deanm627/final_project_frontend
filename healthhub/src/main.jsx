@@ -4,6 +4,8 @@ import './index.css'
 import {createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Navigation from './routes/Navigation';
 import Main from './components/Main';
+import { BPdetail, loader as bpDetailLoader } from './components/BPdetail';
+import { BPHome } from "./routes/BPhome";
 import { Login } from "./routes/Login";
 import { UserHome } from "./routes/UserHome";
 import { Logout } from './routes/Logout';
@@ -30,6 +32,15 @@ const router = createBrowserRouter([
       {
         path: "/userhome",
         element: <UserHome />
+      },
+      {
+        path: "/medprob/bp",
+        element: <BPHome />
+      },
+      {
+        path: "/medprob/bps/:bpId",
+        element: <BPdetail />,
+        loader: bpDetailLoader,
       },
       {
         path: "/logout",
