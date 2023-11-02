@@ -54,15 +54,17 @@ export default function Register() {
                        {withCredentials: true})
                        .then(response => {
                         console.log(response)
-                        setStatus(response.status)
-                        setReason(response.data)
                         if (response.status == 201) {
                             setFirstName('')
                             setLastName('')
                             setUsername('')
                             setPassword('')
                             setEmail('')
-                        } 
+                            setStatus(201)
+                        } else {
+                            setStatus(response.response.status)
+                            setReason(response.response.data)
+                        }
                        });
 
        // Redirect after submission.      
