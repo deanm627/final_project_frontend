@@ -24,7 +24,7 @@ const FormWrapper = styled.div`
     }
 `
 
-export default function UrlForm() {
+export default function BPForm() {
     const [systolic, setSystolic] = useState('');
     const [diastolic, setDiastolic] = useState('');
     const [date, setDate] = useState('');
@@ -55,7 +55,7 @@ export default function UrlForm() {
                             setStatus(response.status)
                             setTimeout(() => { 
                                 window.location.reload()
-                            }, 2000);
+                            }, 1000);
                         } else {
                             setStatus(response.response.status)
                         }

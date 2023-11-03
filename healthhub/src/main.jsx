@@ -7,7 +7,7 @@ import Main from './components/Main';
 import { BPdetail, loader as bpDetailLoader } from './components/BPdetail';
 import { BPHome } from "./routes/BPhome";
 import { Login } from "./routes/Login";
-import { UserHome } from "./routes/UserHome";
+import { BPlist } from "./routes/BPlist";
 import { Logout } from './routes/Logout';
 import Register from './routes/Register';
 import './interceptor/axios';
@@ -30,8 +30,8 @@ const router = createBrowserRouter([
         element: <Login />
       },
       {
-        path: "/userhome",
-        element: <UserHome />
+        path: "/medprob/bplist",
+        element: <BPlist />
       },
       {
         path: "/medprob/bp",

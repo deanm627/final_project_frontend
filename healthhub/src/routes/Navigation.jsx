@@ -28,7 +28,7 @@ export default function Navigation() {
                     <Link to="/">Home</Link>
                 </div> 
                 <div> 
-                    {isAuth ? <Link to ="/userhome">My HealthHub</Link> : 
+                    {isAuth ? <Link to ="/medprob/bp">My HealthHub</Link> : 
                             <Link to ="/register">Register</Link> }
                 </div>
                 <div>

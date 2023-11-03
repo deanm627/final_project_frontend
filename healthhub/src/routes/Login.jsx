@@ -45,7 +45,7 @@ export const Login = () => {
         // localStorage.setItem('user_id', data.user_id);
         // localStorage.setItem('first_name', data.first_name);
         // axios.defaults.headers.common['Authorization'] = `Bearer ${data['access']}`;
-        window.location.href = '/userhome'
+        window.location.href = '/medprob/bp'
     }
    return (
      <div>

@@ -84,7 +84,7 @@ export const BPdetail = () => {
                         if (response.status == 204) {
                             setTimeout(() => { 
                                 window.location.href = '/userhome'
-                            }, 2000);
+                            }, 1000);
                         } 
                        });
     }
@@ -112,7 +112,7 @@ export const BPdetail = () => {
                             setStatus(response.status)
                             setTimeout(() => { 
                                 window.location.reload()
-                            }, 2000);
+                            }, 1000);
                         } else {
                             setStatus(response.response.status)
                         }

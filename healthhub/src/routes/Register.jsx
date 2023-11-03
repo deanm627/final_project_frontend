@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, redirect } from 'react-router-dom';
 import axios from "axios";
 import styled from 'styled-components';
 
@@ -61,6 +61,9 @@ export default function Register() {
                             setPassword('')
                             setEmail('')
                             setStatus(response.status)
+                            setTimeout(() => { 
+                                window.location.href = '/login'
+                            }, 1000);
                         } else {
                             setReason(response.response.data)
                             setStatus(response.response.status)
@@ -113,8 +116,7 @@ export default function Register() {
                     <button type='submit'>Submit</button>
                     { status == 201  
                         ? <p className='success'>User successfully created. <br></br> 
-                           Please <Link to="/login">login</Link>
-                          </p> 
+                           You will be re-directed to the login page</p>
                         : null}
                     { status == 400 ? 
                         <p className='failure'>{reason}</p> : null}

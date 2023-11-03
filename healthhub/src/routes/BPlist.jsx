@@ -13,7 +13,7 @@ const OuterWrapper = styled.div`
     }
 `
 
-export const UserHome = () => {
+export const BPlist = () => {
     const [bps, setBps] = useState([]);
     const [userInfo, setUserInfo] = useState([]);
 
@@ -72,7 +72,7 @@ export const UserHome = () => {
                         </ul>
                     ))}
                 </div> 
-                <BPForm />
+                
             </OuterWrapper>
         </>
     )
