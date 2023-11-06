@@ -131,6 +131,7 @@ export const BPedit = ({ bp, newOrEdit, defaultEdit, newCancel }) => {
                         value={systolic}
                         required
                         max='300'
+                        placeholder='Systolic'
                         onChange={e => setSystolic(e.target.value)} />/
                     <input
                         className='BPnumber'
@@ -139,6 +140,7 @@ export const BPedit = ({ bp, newOrEdit, defaultEdit, newCancel }) => {
                         value={diastolic}
                         required
                         max='300'
+                        placeholder='Diastolic'
                         onChange={e => setDiastolic(e.target.value)} />
                 </td>
                 <td>
@@ -167,7 +169,7 @@ export const BPedit = ({ bp, newOrEdit, defaultEdit, newCancel }) => {
                         : <button type='submit' onClick={(e) => saveChange(e)}>Save</button>
                     }
                     {neworEdit 
-                        ? <button type='button' onClick={newCancel}>Delete</button>
+                        ? <button type='button' onClick={newCancel}>Cancel</button>
                         : <button type='button' onClick={(e) => deleteBP(e)}>Delete</button>
                     }
                 </td>

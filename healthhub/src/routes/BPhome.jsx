@@ -1,15 +1,73 @@
 import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
-import { BPform } from '../components/BPform';
+import { BPedit } from '../components/BPedit';
 import axios from "axios";
 import styled from 'styled-components';
 
 const OuterWrapper = styled.div`
+    margin: 40px;
     display: flex;
     flex-direction: column;
 
-    .form {
+    th, tr {
+        border-bottom: 1px solid;
+    }    
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    tr {
+        height: 40px;
+    }
+
+    th {
+        width: 25%;
+    }
+
+    td {
+        text-align: center;
+    }
+
+    tr:hover {
+        background-color: rgba(255, 255, 255, 0.87);
+        color: black;
+    }
+
+    // tr:nth-child(even) {background-color: gray;}
+    
+    .pageLinks {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 40px;
+    }
+
+    .link {
+        border: 1px solid rgba(255, 255, 255, 0.87);
+        padding: 10px;
+    }
+
+    .link a {
+        color: black;
+    }
+
+    .link:hover {
+        background-color: rgba(255, 255, 255, 0.87);
+    }
+
+    .BPListTable {
+        overflow-x: scroll;
+        border-bottom: none;
+    }
+
+    .BPnumber {
         width: 30%;
+        margin: 0 5px;
+    }
+
+    button {
+        margin: 0 5px;
     }
 `
 
@@ -17,7 +75,7 @@ const InnerWrapper = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 30px auto;
+    margin: 0 auto;
 
     h3 {
         font-size: 2rem;
@@ -50,6 +108,7 @@ const InnerWrapper = styled.div`
     .data {
         margin-bottom: 20px;
     }
+
 `
 
 export const BPHome = () => {
@@ -59,9 +118,17 @@ export const BPHome = () => {
     const [oldestDate, setOldestDate] = useState('');
     const [dateRange, setDateRange] = useState('');
     const [userInfo, setUserInfo] = useState('');
-    const [form, setForm] = useState(false);
+    const [addNew, setAddNew] = useState(false);
 
     const token = localStorage.getItem('access_token');
+    const blankBP = {
+        'systolic': '',
+        'diastolic': '',
+        'date_num': '',
+        'date_str': '',
+        'time_num': '',
+        'time_str': '',
+    }
 
     useEffect(() => {
         if (localStorage.getItem('access_token') === null) {
@@ -131,9 +198,38 @@ export const BPHome = () => {
                        });
     }
 
+    function handleAddNew() {
+        setAddNew(!addNew)
+    }
+
     return (
         <>
             <OuterWrapper>
+                <div className="pageLinks">
+                    <button className="link"><Link to="/medprob/bplist">BP readings list</Link></button>
+                    <button className="link" type='button' onClick={handleAddNew}>Enter new BP reading</button>
+                </div>
+                <div>
+                    {addNew ? 
+                        <div className="BPListTable">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Blood Pressure (mmHg)</th>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <BPedit bp={blankBP} newOrEdit={true} defaultEdit={true} newCancel={handleAddNew} />
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        : null}
+                </div>
                 <InnerWrapper>
                 <div className="BPHome">
                     <h3>Average Blood Pressure</h3>
@@ -160,13 +256,6 @@ export const BPHome = () => {
                     </form>
                 </div> 
                 </InnerWrapper>
-                <div className='form'>
-                    <button type='button' onClick={() => setForm(!form)}>Enter new BP reading</button>
-                    {form ? <BPform /> : null}
-                </div>
-                <div>
-                    <Link to="/medprob/bplist">BP readings list</Link>
-                </div>
             </OuterWrapper>
         </>
     )
