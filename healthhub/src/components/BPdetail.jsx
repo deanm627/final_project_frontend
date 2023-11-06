@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLoaderData, Link } from 'react-router-dom';
-import BPForm from '../components/BPform';
+import { BPform } from '../components/BPform';
 import axios from "axios";
 import styled from 'styled-components';
 

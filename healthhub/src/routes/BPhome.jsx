@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
-import BPForm from '../components/BPform';
+import { BPform } from '../components/BPform';
 import axios from "axios";
 import styled from 'styled-components';
 
@@ -21,6 +21,7 @@ const InnerWrapper = styled.div`
 
     h3 {
         font-size: 2rem;
+        text-align: center;
     }
 
     .display {
@@ -135,13 +136,13 @@ export const BPHome = () => {
             <OuterWrapper>
                 <InnerWrapper>
                 <div className="BPHome">
-                    <h3>{userInfo.first_name}'s Blood Pressure</h3>
+                    <h3>Average Blood Pressure</h3>
                     <div className="display">
                         <p className='valueSys'>{bpSys}</p>
                         <p className='valueDia'>{bpDia}</p>
                     </div>
                     <div className="data">
-                        <p>Average BP calculated from <strong>{count}</strong> values since <strong>{oldestDate}</strong></p>
+                        <p>mmHg. Calculated from <strong>{count}</strong> values since <strong>{oldestDate}</strong></p>
                     </div>
                     <form onSubmit={submitDateRange}>
                         <label>Select new date range: </label>
@@ -161,7 +162,7 @@ export const BPHome = () => {
                 </InnerWrapper>
                 <div className='form'>
                     <button type='button' onClick={() => setForm(!form)}>Enter new BP reading</button>
-                    {form ? <BPForm /> : null}
+                    {form ? <BPform /> : null}
                 </div>
                 <div>
                     <Link to="/medprob/bplist">BP readings list</Link>

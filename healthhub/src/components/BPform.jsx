@@ -24,7 +24,7 @@ const FormWrapper = styled.div`
     }
 `
 
-export default function BPForm() {
+export const BPform = () => {
     const [systolic, setSystolic] = useState('');
     const [diastolic, setDiastolic] = useState('');
     const [date, setDate] = useState('');
@@ -39,8 +39,10 @@ export default function BPForm() {
         const bodyFormData = new FormData();
         bodyFormData.append('systolic', systolic);
         bodyFormData.append('diastolic', diastolic);
-        bodyFormData.append('date', date);
-        bodyFormData.append('time', time);
+        bodyFormData.append('date_num', date);
+        bodyFormData.append('date_str', date);
+        bodyFormData.append('time_num', time);
+        bodyFormData.append('time_str', time);
 
         // Create the POST request
         await axios.post('http://127.0.0.1:8000/medprob/bps/', bodyFormData, 
