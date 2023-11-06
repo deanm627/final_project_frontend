@@ -48,12 +48,9 @@ const OuterWrapper = styled.div`
         padding: 10px;
     }
 
-    .link a {
-        color: black;
-    }
-
     .link:hover {
         background-color: rgba(255, 255, 255, 0.87);
+        color: black;
     }
 
     .BPListTable {
@@ -70,6 +67,13 @@ const OuterWrapper = styled.div`
         margin: 0 5px;
     }
 
+    .range {
+        margin: 0 0 25px 0;
+    }
+
+    .dateInput {
+        margin: 0 5px;
+    }
 `
 
 export const BPlist = () => {
@@ -114,23 +118,20 @@ export const BPlist = () => {
         };
     }, []);
 
-    function handleFilter(e) {
+    async function getBPFilteredData(e) {
         e.preventDefault()
 
-        if (filter1 > filter2) {
-            const result = bps.filter((bp) => bp.date_num <= filter1 && bp.date_num >= filter2);
-            setBpsFiltered(result);
-            return;
-        }
-        if (filter2 > filter1) {
-            const result = bps.filter((bp) => bp.date_num <= filter2 && bp.date_num >= filter1);
-            setBpsFiltered(result);
-            return;
-        }
-        if (filter1 === filter2) {
-            const result = bps.filter((bp) => bp.date_num === filter1);
-            setBpsFiltered(result);
-            return;
+        try {
+            await axios.get(`http://127.0.0.1:8000/medprob/bps/?date1=${filter1}&date2=${filter2}`, 
+                { headers: 
+                    {'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'} })
+                .then(response => {
+                    console.log(response);
+                    setBpsFiltered(response.data);
+                });
+        } catch (e) {
+            console.error(e)
         }
     }
 
@@ -148,9 +149,7 @@ export const BPlist = () => {
         <>
             <OuterWrapper>
                 <div className="pageLinks">
-                    <button className="link"> 
-                        <Link to="/medprob/bp">BP Summary</Link>
-                    </button>
+                    <Link to="/medprob/bp"><button className="link">BP Summary</button></Link>
                     <button 
                         type='button' 
                         className="link"
@@ -158,10 +157,18 @@ export const BPlist = () => {
                         Add BP reading
                     </button>
                 </div>
-                <form onSubmit={(e) => handleFilter(e)}>
+                <form className='range' onSubmit={(e) => getBPFilteredData(e)}>
                     <label>Select new date range: </label>
-                    <input type='date' value={filter1} onChange={e => setFilter1(e.target.value)} />
-                    <input type='date' value={filter2} onChange={e => setFilter2(e.target.value)} />
+                    <input 
+                        className='dateInput' 
+                        type='date' required 
+                        value={filter1} 
+                        onChange={e => setFilter1(e.target.value)} />
+                    <input 
+                        className='dateInput' 
+                        type='date' required 
+                        value={filter2} 
+                        onChange={e => setFilter2(e.target.value)} />
                     <button type='submit'>Filter</button>
                     <button type='button' onClick={handleReset}>Reset</button>
                 </form>
@@ -193,7 +200,7 @@ export const BPlist = () => {
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td>{bpsFiltered.length} values</td>
+                                <td>Values: {bpsFiltered.length}</td>
                             </tr>
                         </tfoot>
                     </table>

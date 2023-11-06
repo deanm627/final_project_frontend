@@ -48,12 +48,9 @@ const OuterWrapper = styled.div`
         padding: 10px;
     }
 
-    .link a {
-        color: black;
-    }
-
     .link:hover {
         background-color: rgba(255, 255, 255, 0.87);
+        color: black;
     }
 
     .BPListTable {
@@ -117,7 +114,6 @@ export const BPHome = () => {
     const [count, setCount] = useState('');
     const [oldestDate, setOldestDate] = useState('');
     const [dateRange, setDateRange] = useState('');
-    const [userInfo, setUserInfo] = useState('');
     const [addNew, setAddNew] = useState(false);
 
     const token = localStorage.getItem('access_token');
@@ -144,7 +140,8 @@ export const BPHome = () => {
                             'Content-Type': 'application/json'} })
                         .then(response => {
                             console.log(response);
-                            setUserInfo(response.data);
+                            localStorage.setItem('first_name', response.data['first_name']);
+                            localStorage.setItem('username', response.data['username']);
                         })
                 } catch (e) {
                     console.error(e)
@@ -206,7 +203,7 @@ export const BPHome = () => {
         <>
             <OuterWrapper>
                 <div className="pageLinks">
-                    <button className="link"><Link to="/medprob/bplist">BP readings list</Link></button>
+                <Link to="/medprob/bplist"><button className="link">BP readings list</button></Link>
                     <button className="link" type='button' onClick={handleAddNew}>Enter new BP reading</button>
                 </div>
                 <div>
