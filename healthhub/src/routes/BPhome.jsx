@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import { BPedit } from '../components/BPedit';
+import Barchart from '../components/Barchart';
 import axios from "axios";
 import styled from 'styled-components';
 
@@ -66,6 +67,58 @@ const OuterWrapper = styled.div`
     button {
         margin: 0 5px;
     }
+
+    .chart {
+        border: 2px solid black;
+        height: 300px;
+        width: 600px;
+        display: flex;
+        margin: 40px auto;
+        background-color: #fafafa;
+    }
+
+    .chartsAMPM {
+        margin-top: 40px;
+        display: flex;
+        justify-content: space-evenly;
+    }
+
+    .circle {
+        width: 250px;
+        height: 250px;
+        line-height: 75px;
+        border-radius: 50%;
+        font-size: 50px;
+        color: #030712;
+        text-align: center;
+        background: #fafafa;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }    
+
+    .circle.am { 
+        border: 3px solid #fde047;
+    }
+
+    .circle.pm { 
+        border: 3px solid #881337;
+    }
+
+    .filterButton, .editButton {
+        border: 1px solid black;
+        border-radius: 5px;
+        padding: 2px 8px;
+    }
+
+    .filterButton:hover, .editButton:hover {
+        background-color: #1f2937;
+        color: #f5f5f4;
+    }
+
+    input {
+        border: 1px solid #1f2937;
+    }
 `
 
 const InnerWrapper = styled.div`
@@ -85,6 +138,7 @@ const InnerWrapper = styled.div`
         flex-direction: column;
         align-items: center;
         font-size: 5rem;
+        font-weight: 500;
         padding: 15px;
     }
 
@@ -95,11 +149,6 @@ const InnerWrapper = styled.div`
 
     .line {
         font-weight: 800;
-    }
-
-    .valueSys {
-        border-bottom: 4px solid rgba(255, 255, 255, 0.87);
-        
     }
 
     .data {
@@ -203,7 +252,7 @@ export const BPHome = () => {
         <>
             <OuterWrapper>
                 <div className="pageLinks">
-                <Link to="/medprob/bplist"><button className="link">BP readings list</button></Link>
+                    <Link to="/medprob/bplist"><button className="link">BP readings list</button></Link>
                     <button className="link" type='button' onClick={handleAddNew}>Enter new BP reading</button>
                 </div>
                 <div>
@@ -228,31 +277,44 @@ export const BPHome = () => {
                         : null}
                 </div>
                 <InnerWrapper>
-                <div className="BPHome">
-                    <h3>Average Blood Pressure</h3>
-                    <div className="display">
-                        <p className='valueSys'>{bpSys}</p>
-                        <p className='valueDia'>{bpDia}</p>
-                    </div>
-                    <div className="data">
-                        <p>mmHg. Calculated from <strong>{count}</strong> values since <strong>{oldestDate}</strong></p>
-                    </div>
-                    <form onSubmit={submitDateRange}>
-                        <label>Select new date range: </label>
-                        <select value={dateRange} onChange={e => setDateRange(e.target.value)}>
-                            <option>-----</option>
-                            <option value='7'>1 week</option>
-                            <option value='14'>2 weeks</option>
-                            <option value='30'>1 month</option>
-                            <option value='90'>3 months</option>
-                            <option value='180'>6 months</option>
-                            <option value='270'>9 months</option>
-                            <option value='365'>1 year</option>
-                        </select>
-                        <button type='submit'>Submit</button>
-                    </form>
-                </div> 
+                    <div className="BPHome">
+                        <h3>Average Blood Pressure</h3>
+                        <div className="display bg-gray-500">
+                            <div className='valueSys text-stone-100 border-b-8 border-stone-100'>{bpSys}</div>
+                            <div className='valueDia text-stone-100'>{bpDia}</div>
+                        </div>
+                        <div className="data">
+                            <p>mmHg. Calculated from <strong>{count}</strong> values since <strong>{oldestDate}</strong></p>
+                        </div>
+                        <form onSubmit={submitDateRange}>
+                            <label>Select new date range: </label>
+                            <select value={dateRange} onChange={e => setDateRange(e.target.value)}>
+                                <option>-----</option>
+                                <option value='7'>1 week</option>
+                                <option value='14'>2 weeks</option>
+                                <option value='30'>1 month</option>
+                                <option value='90'>3 months</option>
+                                <option value='180'>6 months</option>
+                                <option value='270'>9 months</option>
+                                <option value='365'>1 year</option>
+                            </select>
+                            <button className='filterButton' type='submit'>Submit</button>
+                        </form>
+                    </div> 
                 </InnerWrapper>
+                <div className='chartsAMPM'>
+                    <div className='circle am'>
+                        <div className='border-b-4 border-gray-950 mt-12'>120</div>
+                        <div>80</div>
+                    </div>
+                    <div className='circle pm'>
+                    <div className='border-b-4 border-gray-950 mt-12'>120</div>
+                        <div>80</div>
+                    </div>
+                </div>
+                <div className='chart'>
+                    <Barchart />
+                </div>
             </OuterWrapper>
         </>
     )

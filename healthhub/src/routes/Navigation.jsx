@@ -1,25 +1,5 @@
 import { useState, useEffect} from 'react';
 import { Link, Outlet } from 'react-router-dom';
-import styled from 'styled-components';
-
-const NavWrapper = styled.div`
-    display: flex;
-    justify-content: space-evenly;
-    background-color: gray;
-    overflow: hidden;
-    
-    .userMenu {
-        overflow: hidden;
-    }
-
-    a {
-        color: black;
-    }
-
-    ul {
-        list-style-type: none;
-    }
-`
 
 export default function Navigation() {
     const [isAuth, setIsAuth] = useState(false);
@@ -42,37 +22,33 @@ export default function Navigation() {
     };
 
     return (
-        <div className='w-screen h-screen overflow-auto'>
-            <header className="sticky top-0 z-50">
-                <NavWrapper>
-                    <div>
+        <>
+            <div className='h-12 flex justify-evenly items-center bg-stone-100'>
+                    <div className='hover:bg-gray-800 hover:text-stone-100 h-full p-2 flex justify-evenly items-center'>
                         <Link to="/">Home</Link>
                     </div>
-                    <div>
+                    <div className='hover:bg-gray-800 hover:text-stone-100 h-full p-2 flex justify-evenly items-center'>
                         {isAuth ? <Link to="/medprob/bp">My HealthHub</Link> :
                             <Link to="/register">Register</Link>}
                     </div>
-                    <div>
+                    <div className='hover:bg-gray-800 hover:text-stone-100 h-full p-2 flex justify-evenly items-center'>
                         {isAuth 
                         ?
-                            <div className="userMenu" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+                            <div className="relative inline-block" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
                                 <button type='button'>{username}</button>
                                 {dropdown 
-                                    ? <ul>
-                                        <li><Link to="/logout">My Account</Link> </li>
-                                        <li><Link to="/logout">Logout</Link> </li>
-                                        </ul>  
+                                    ? <div className='absolute w-24'>
+                                        <Link className='w-24 text-gray-800 bg-stone-100 block hover:bg-gray-800 hover:text-stone-100'to="/logout">My Account</Link> 
+                                        <Link className='w-24 text-gray-800 bg-stone-100 block hover:bg-gray-800 hover:text-stone-100' to="/logout">Logout</Link> 
+                                     </div>
                                     : null
                                 }
                             </div>
                         :
-                            <Link className='hover:bg-gray-300' to="/login">Login</Link>}
+                            <Link to="/login">Login</Link>}
                     </div>
-                </NavWrapper>
-            </header>
-            <main className="relative h-full">
-                <Outlet />
-            </main>
-        </div>
+            </div>
+            <Outlet />
+        </>
     );
  }

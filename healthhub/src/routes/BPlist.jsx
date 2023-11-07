@@ -44,7 +44,7 @@ const OuterWrapper = styled.div`
     }
 
     .link {
-        border: 1px solid rgba(255, 255, 255, 0.87);
+        border: 2px solid rgba(255, 255, 255, 0.87);
         padding: 10px;
     }
 
@@ -73,6 +73,21 @@ const OuterWrapper = styled.div`
 
     .dateInput {
         margin: 0 5px;
+    }
+
+    .filterButton, .editButton {
+        border: 1px solid black;
+        border-radius: 5px;
+        padding: 2px 8px;
+    }
+
+    .filterButton:hover, .editButton:hover {
+        background-color: #1f2937;
+        color: #f5f5f4;
+    }
+
+    input {
+        border: 1px solid #1f2937;
     }
 `
 
@@ -169,8 +184,8 @@ export const BPlist = () => {
                         type='date' required 
                         value={filter2} 
                         onChange={e => setFilter2(e.target.value)} />
-                    <button type='submit'>Filter</button>
-                    <button type='button' onClick={handleReset}>Reset</button>
+                    <button className='filterButton' type='submit'>Filter</button>
+                    <button className='filterButton' type='button' onClick={handleReset}>Reset</button>
                 </form>
                 <div className="BPListTable">
                     <table>
@@ -200,7 +215,7 @@ export const BPlist = () => {
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td>Values: {bpsFiltered.length}</td>
+                                <td>Values: <strong>{bpsFiltered.length}</strong></td>
                             </tr>
                         </tfoot>
                     </table>

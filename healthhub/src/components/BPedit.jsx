@@ -117,7 +117,7 @@ export const BPedit = ({ bp, newOrEdit, defaultEdit, newCancel }) => {
                 <td>
                     {neworEdit 
                         ? null
-                        : <button type='button' onClick={() => setEdit(true)}>Edit</button>
+                        : <button type='button' className='editButton' onClick={() => setEdit(true)}>Edit</button>
                     }
                 </td>
             </> 
@@ -162,15 +162,15 @@ export const BPedit = ({ bp, newOrEdit, defaultEdit, newCancel }) => {
                 <td>
                     {neworEdit 
                         ? null
-                        : <button type='button' onClick={handleCancel}>Cancel</button>
+                        : <button type='button' className='editButton' onClick={handleCancel}>Cancel</button>
                     }
                     {neworEdit 
-                        ? <button type='submit' onClick={(e) => createNew(e)}>Save</button>
-                        : <button type='submit' onClick={(e) => saveChange(e)}>Save</button>
+                        ? <button type='submit' className='editButton' onClick={(e) => createNew(e)}>Save</button>
+                        : <button type='submit' className='editButton' onClick={(e) => saveChange(e)}>Save</button>
                     }
                     {neworEdit 
-                        ? <button type='button' onClick={newCancel}>Cancel</button>
-                        : <button type='button' onClick={(e) => deleteBP(e)}>Delete</button>
+                        ? <button type='button' className='editButton' onClick={newCancel}>Cancel</button>
+                        : <button type='button' className='editButton' onClick={(e) => deleteBP(e)}>Delete</button>
                     }
                 </td>
             </>
