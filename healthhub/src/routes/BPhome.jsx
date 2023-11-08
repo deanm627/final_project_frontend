@@ -119,6 +119,12 @@ const OuterWrapper = styled.div`
     input {
         border: 1px solid #1f2937;
     }
+
+    h3 {
+        text-align: center;
+        font-size: 1.7rem;
+        font-weight: 500;
+    }
 `
 
 const InnerWrapper = styled.div`
@@ -155,14 +161,19 @@ const InnerWrapper = styled.div`
         margin-bottom: 20px;
     }
 
+    select {
+        margin: 0 3px;
+    }
+
 `
 
 export const BPHome = () => {
-    const [bpSys, setBpSys] = useState('');
-    const [bpDia, setBpDia] = useState('');
-    const [count, setCount] = useState('');
-    const [oldestDate, setOldestDate] = useState('');
-    const [dateRange, setDateRange] = useState('');
+    const [bpAvgAll, setBpAvgAll] = useState('');
+    const [bpAvgAM, setBpAvgAM] = useState('');
+    const [bpAvgPM, setBpAvgPM] = useState('');
+    const [chartData, setChartData] = useState('');
+    const [rangeNum, setRangeNum] = useState('');
+    const [rangeType, setRangeType] = useState('');
     const [addNew, setAddNew] = useState(false);
 
     const token = localStorage.getItem('access_token');
@@ -205,10 +216,9 @@ export const BPHome = () => {
                             'Content-Type': 'application/json'} })
                         .then(response => {
                             console.log(response);
-                            setBpSys(response.data['sys_avg']);
-                            setBpDia(response.data['dia_avg']);
-                            setCount(response.data['count']);
-                            setOldestDate(response.data['first_date']);
+                            setBpAvgAll(response.data['all']);
+                            setBpAvgAM(response.data['am']);
+                            setBpAvgPM(response.data['pm']);
                         });
                 } catch (e) {
                     console.error(e)
@@ -223,21 +233,17 @@ export const BPHome = () => {
     const submitDateRange = async e => {
         e.preventDefault();
 
-        const days = {days: {dateRange}}
-
-        console.log(days)
-
-        await axios.get(`http://127.0.0.1:8000/medprob/bp/?days=${dateRange}`, 
+        await axios.get(`http://127.0.0.1:8000/medprob/bp/?num=${rangeNum}&type=${rangeType}`, 
                        {headers: 
                             {'Authorization': `Bearer ${token}`,
                             'Content-Type': 'application/json'}
                        }).then(response => {
                         console.log(response)
                         if (response.status == 200) {
-                            setBpSys(response.data['sys_avg']);
-                            setBpDia(response.data['dia_avg']);
-                            setCount(response.data['count']);
-                            setOldestDate(response.data['first_date']);
+                            setBpAvgAll(response.data['all']);
+                            setBpAvgAM(response.data['am']);
+                            setBpAvgPM(response.data['pm']);
+                            setChartData(response.data['data_chart']);
                         } else {
                             // some error handling here
                         }
@@ -280,40 +286,56 @@ export const BPHome = () => {
                     <div className="BPHome">
                         <h3>Average Blood Pressure</h3>
                         <div className="display bg-gray-500">
-                            <div className='valueSys text-stone-100 border-b-8 border-stone-100'>{bpSys}</div>
-                            <div className='valueDia text-stone-100'>{bpDia}</div>
+                            <div className='valueSys text-stone-100 border-b-8 border-stone-100'>{bpAvgAll.sys_avg}</div>
+                            <div className='valueDia text-stone-100'>{bpAvgAll.dia_avg}</div>
                         </div>
                         <div className="data">
-                            <p>mmHg. Calculated from <strong>{count}</strong> values since <strong>{oldestDate}</strong></p>
+                            <p>mmHg. Calculated from <strong>{bpAvgAll.count}</strong> values since <strong>{bpAvgAll.first_date}</strong></p>
                         </div>
                         <form onSubmit={submitDateRange}>
-                            <label>Select new date range: </label>
-                            <select value={dateRange} onChange={e => setDateRange(e.target.value)}>
+                            <label>Select date range: </label>
+                            <select value={rangeNum} onChange={e => setRangeNum(e.target.value)}>
                                 <option>-----</option>
-                                <option value='7'>1 week</option>
-                                <option value='14'>2 weeks</option>
-                                <option value='30'>1 month</option>
-                                <option value='90'>3 months</option>
-                                <option value='180'>6 months</option>
-                                <option value='270'>9 months</option>
-                                <option value='365'>1 year</option>
+                                <option value='1'>1</option>
+                                <option value='2'>2</option>
+                                <option value='3'>3</option>
+                                <option value='4'>4</option>
+                                <option value='5'>5</option>
+                                <option value='6'>6</option>
+                                <option value='7'>7</option>
+                                <option value='8'>8</option>
+                                <option value='9'>9</option>
+                                <option value='10'>10</option>
+                            </select>
+                            <select value={rangeType} required onChange={e => setRangeType(e.target.value)}>
+                                <option>-----</option>
+                                <option value='day'>days</option>
+                                <option value='week'>weeks</option>
+                                <option value='month'>months</option>
+                                <option value='year'>years</option>
                             </select>
                             <button className='filterButton' type='submit'>Submit</button>
                         </form>
                     </div> 
                 </InnerWrapper>
                 <div className='chartsAMPM'>
-                    <div className='circle am'>
-                        <div className='border-b-4 border-gray-950 mt-12'>120</div>
-                        <div>80</div>
+                    <div>
+                        <h3>AM</h3>
+                        <div className='circle am'>
+                            <div className='border-b-4 border-gray-950 mt-12'>{bpAvgAM.sys_avg}</div>
+                            <div>{bpAvgAM.dia_avg}</div>
+                        </div>
                     </div>
-                    <div className='circle pm'>
-                    <div className='border-b-4 border-gray-950 mt-12'>120</div>
-                        <div>80</div>
+                    <div>
+                        <h3>PM</h3>
+                        <div className='circle pm'>
+                            <div className='border-b-4 border-gray-950 mt-12'>{bpAvgPM.sys_avg}</div>
+                            <div>{bpAvgPM.dia_avg}</div>
+                        </div>
                     </div>
                 </div>
                 <div className='chart'>
-                    <Barchart />
+                    <Barchart dataset={chartData}/>
                 </div>
             </OuterWrapper>
         </>
