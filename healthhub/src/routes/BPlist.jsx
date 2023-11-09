@@ -89,9 +89,25 @@ const OuterWrapper = styled.div`
     input {
         border: 1px solid #1f2937;
     }
+
+    .pages {
+        display: flex;
+        justify-content: center;
+        padding: 10px;
+        margin-right: 10px;
+    }
+
+    .filterButton:disabled {
+        display: none;
+    }
 `
 
 export const BPlist = () => {
+    const [listCount, setListCount] = useState('');
+    const [nextUrl, setNextUrl] = useState('');
+    const [previousUrl, setPreviousUrl] = useState('');
+    const [pageNum, setPageNum] = useState(1);
+    const [pageTotal, setPageTotal] = useState([]);
     const [bps, setBps] = useState([]);
     const [filter1, setFilter1] = useState('');
     const [filter2, setFilter2] = useState('');
@@ -113,28 +129,34 @@ export const BPlist = () => {
             window.location.href = '/login'
         }
         else {
-            async function getBPData() {
-                try {
-                    await axios.get('http://127.0.0.1:8000/medprob/bps/', 
-                        { headers: 
-                            {'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json'} })
-                        .then(response => {
-                            console.log(response);
-                            setBps(response.data);
-                            setBpsFiltered(response.data);
-                        });
-                } catch (e) {
-                    console.error(e)
-                }
-            }
-
             getBPData();
         };
     }, []);
 
+    async function getBPData() {
+        try {
+            await axios.get('http://127.0.0.1:8000/medprob/bps/', 
+                { headers: 
+                    {'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'} })
+                .then(response => {
+                    console.log(response);
+                    setListCount(response.data.count);
+                    setPageTotal(Math.ceil(response.data.count/10));
+                    setNextUrl(response.data.next);
+                    setPreviousUrl(response.data.previous);
+                    setBps(response.data.results);
+                    setBpsFiltered(response.data.results);
+                });
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
     async function getBPFilteredData(e) {
         e.preventDefault()
+        setPageNum(1);
+        setPageTotal([]);
 
         try {
             await axios.get(`http://127.0.0.1:8000/medprob/bps/?date1=${filter1}&date2=${filter2}`, 
@@ -143,7 +165,34 @@ export const BPlist = () => {
                     'Content-Type': 'application/json'} })
                 .then(response => {
                     console.log(response);
-                    setBpsFiltered(response.data);
+                    setListCount(response.data.count);
+                    setPageTotal(Math.ceil(response.data.count/10));
+                    setNextUrl(response.data.next);
+                    setPreviousUrl(response.data.previous);
+                    setBpsFiltered(response.data.results);
+                });
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
+    async function getPageData(e, url) {
+        e.preventDefault()
+
+        console.log(url)
+
+        try {
+            await axios.get(url, 
+                { headers: 
+                    {'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'} })
+                .then(response => {
+                    console.log(response);
+                    setListCount(response.data.count);
+                    setPageTotal(Math.ceil(response.data.count/10));
+                    setNextUrl(response.data.next);
+                    setPreviousUrl(response.data.previous);
+                    setBpsFiltered(response.data.results);
                 });
         } catch (e) {
             console.error(e)
@@ -153,11 +202,22 @@ export const BPlist = () => {
     function handleReset() {
         setFilter1('')
         setFilter2('')
-        setBpsFiltered(bps)
+        getBPData()
     }
 
     function handleAddNew() {
-        setAddNew(!addNew)
+        setAddNew(!addNew);
+    }
+
+    function handlePrevious(e) {
+        setPageNum(pageNum - 1);
+        getPageData(e, previousUrl);
+    }
+
+    function handleNext(e) {
+        setPageNum(pageNum + 1);
+        console.log(nextUrl);
+        getPageData(e, nextUrl);
     }
 
     return (
@@ -185,7 +245,7 @@ export const BPlist = () => {
                         value={filter2} 
                         onChange={e => setFilter2(e.target.value)} />
                     <button className='filterButton' type='submit'>Filter</button>
-                    <button className='filterButton' type='button' onClick={handleReset}>Reset</button>
+                    <button className='filterButton' type='submit' onClick={handleReset}>Reset</button>
                 </form>
                 <div className="BPListTable">
                     <table>
@@ -215,10 +275,27 @@ export const BPlist = () => {
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td>Values: <strong>{bpsFiltered.length}</strong></td>
+                                <td>Values: <strong>{bpsFiltered.length} of {listCount}</strong></td>
                             </tr>
                         </tfoot>
                     </table>
+                    <div className='pages'>
+                        <button 
+                            type='submit' 
+                            className='filterButton' 
+                            value={previousUrl}
+                            onClick={(e) => handlePrevious(e)}
+                            disabled={pageNum === 1}
+                            >Previous</button>
+                        <div>Page {pageNum} of {pageTotal} </div>
+                        <button 
+                            type='submit' 
+                            className='filterButton' 
+                            value={nextUrl}
+                            onClick={(e) => handleNext(e)}
+                            disabled={pageNum === pageTotal}
+                            >Next</button>
+                    </div>
                 </div>  
             </OuterWrapper>
         </>

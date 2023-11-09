@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import { BPedit } from '../components/BPedit';
 import Barchart from '../components/Barchart';
+import Meds from '../components/Meds';
 import axios from "axios";
 import styled from 'styled-components';
 
@@ -354,6 +355,7 @@ export const BPHome = () => {
                     <Barchart dataset={chartData}/>
                 </div>
             </OuterWrapper>
+            <Meds />
         </>
     )
 }
