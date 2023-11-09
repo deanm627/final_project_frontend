@@ -4,14 +4,11 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 export default function Barchart({dataset}) {
     if (dataset) {
-        console.log(dataset)
         const timeLabels = Object.keys(dataset);
         const sysData = [];
         Object.keys(dataset).forEach(key => {sysData.push(dataset[key]['sys_avg'])});
         const diaData = [];
         Object.keys(dataset).forEach(key => {diaData.push(dataset[key]['dia_avg'])});
-        console.log(sysData)
-        console.log(diaData)
 
         const options = {
             responsive: true,

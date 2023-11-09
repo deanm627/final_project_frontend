@@ -244,6 +244,7 @@ export const BPHome = () => {
                             setBpAvgAM(response.data['am']);
                             setBpAvgPM(response.data['pm']);
                             setChartData(response.data['data_chart']);
+                            console.log(response.data['data_chart']);
                         } else {
                             // some error handling here
                         }
@@ -293,7 +294,7 @@ export const BPHome = () => {
                             <p>mmHg. Calculated from <strong>{bpAvgAll.count}</strong> values since <strong>{bpAvgAll.first_date}</strong></p>
                         </div>
                         <form onSubmit={submitDateRange}>
-                            <label>Select date range: </label>
+                            <label>Select data from last: </label>
                             <select value={rangeNum} onChange={e => setRangeNum(e.target.value)}>
                                 <option>-----</option>
                                 <option value='1'>1</option>
@@ -306,13 +307,28 @@ export const BPHome = () => {
                                 <option value='8'>8</option>
                                 <option value='9'>9</option>
                                 <option value='10'>10</option>
+                                <option value='11'>11</option>
+                                <option value='12'>12</option>
                             </select>
                             <select value={rangeType} required onChange={e => setRangeType(e.target.value)}>
                                 <option>-----</option>
-                                <option value='day'>days</option>
-                                <option value='week'>weeks</option>
-                                <option value='month'>months</option>
-                                <option value='year'>years</option>
+                                {rangeNum == 1 
+                                    ?
+                                    <>
+                                        <option value='day'>day</option>
+                                        <option value='week'>week</option>
+                                        <option value='month'>month</option>
+                                        <option value='year'>year</option>
+                                    </>
+                                    :   
+                                    <>
+                                        <option value='day'>days</option>
+                                        <option value='week'>weeks</option>
+                                        <option value='month'>months</option>
+                                        <option value='year'>years</option>
+                                    </>
+                                }
+                                
                             </select>
                             <button className='filterButton' type='submit'>Submit</button>
                         </form>
