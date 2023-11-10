@@ -134,6 +134,9 @@ export const BPlist = () => {
     }, []);
 
     async function getBPData() {
+        setPageNum(1);
+        setPageTotal([]);
+        
         try {
             await axios.get('http://127.0.0.1:8000/medprob/bps/', 
                 { headers: 
