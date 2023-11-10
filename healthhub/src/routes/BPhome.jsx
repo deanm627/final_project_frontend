@@ -2,12 +2,11 @@ import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import { BPedit } from '../components/BPedit';
 import Barchart from '../components/Barchart';
-import Meds from '../components/Meds';
 import axios from "axios";
 import styled from 'styled-components';
 
 const OuterWrapper = styled.div`
-    margin: 40px;
+    margin: 20px;
     display: flex;
     flex-direction: column;
 
@@ -43,11 +42,13 @@ const OuterWrapper = styled.div`
         display: flex;
         justify-content: space-between;
         margin-bottom: 40px;
+        border-bottom: 2px solid black;
     }
 
     .link {
-        border: 1px solid rgba(255, 255, 255, 0.87);
+        border: 2px solid rgba(255, 255, 255, 0.87);
         padding: 10px;
+        margin-bottom: 10px;
     }
 
     .link:hover {
@@ -69,43 +70,6 @@ const OuterWrapper = styled.div`
         margin: 0 5px;
     }
 
-    .chart {
-        border: 2px solid black;
-        height: 300px;
-        width: 600px;
-        display: flex;
-        margin: 40px auto;
-        background-color: #fafafa;
-    }
-
-    .chartsAMPM {
-        margin-top: 40px;
-        display: flex;
-        justify-content: space-evenly;
-    }
-
-    .circle {
-        width: 250px;
-        height: 250px;
-        line-height: 75px;
-        border-radius: 50%;
-        font-size: 50px;
-        color: #030712;
-        text-align: center;
-        background: #fafafa;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }    
-
-    .circle.am { 
-        border: 3px solid #fde047;
-    }
-
-    .circle.pm { 
-        border: 3px solid #881337;
-    }
-
     .filterButton, .editButton {
         border: 1px solid black;
         border-radius: 5px;
@@ -124,17 +88,27 @@ const OuterWrapper = styled.div`
     h3 {
         text-align: center;
         font-size: 1.7rem;
+        font-weight: 400;
+    }
+
+    h1 {
+        font-size: 2.5rem;
         font-weight: 500;
+        text-align: center;
     }
 `
 
 const InnerWrapper = styled.div`
     display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto;
+    flex-direction: column;
 
-    h3 {
+    .subtitleDiv {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+
+    h3.subtitle {
         font-size: 2rem;
         text-align: center;
     }
@@ -166,6 +140,44 @@ const InnerWrapper = styled.div`
         margin: 0 3px;
     }
 
+    .dataDisplay {
+        display: flex;
+        justify-content: space-evenly;
+    }
+
+    .circle {
+        width: 225px;
+        height: 225px;
+        line-height: 60px;
+        border-radius: 50%;
+        font-size: 50px;
+        color: #030712;
+        text-align: center;
+        background-color: #fafafa;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }    
+
+    .circle.am { 
+        border: 3px solid #fde047;
+    }
+
+    .circle.pm { 
+        border: 3px solid #881337;
+    }
+
+    .formDiv {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 10px;
+        margin-top: 10px;
+    }
+
+    select {
+        border: 1px solid #1f2937;
+    }
+
 `
 
 export const BPHome = () => {
@@ -192,44 +204,43 @@ export const BPHome = () => {
             window.location.href = '/login'
         }
         else {
-            
-            async function getUserData() {
-                try {
-                    await axios.get('http://127.0.0.1:8000/accounts/login/', 
-                        { headers: 
-                            {'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json'} })
-                        .then(response => {
-                            console.log(response);
-                            localStorage.setItem('first_name', response.data['first_name']);
-                            localStorage.setItem('username', response.data['username']);
-                        })
-                } catch (e) {
-                    console.error(e)
-                }
-            }
-
-            async function getBPData() {
-                try {
-                    await axios.get('http://127.0.0.1:8000/medprob/bp/', 
-                        { headers: 
-                            {'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json'} })
-                        .then(response => {
-                            console.log(response);
-                            setBpAvgAll(response.data['all']);
-                            setBpAvgAM(response.data['am']);
-                            setBpAvgPM(response.data['pm']);
-                        });
-                } catch (e) {
-                    console.error(e)
-                }
-            }
-
             getUserData();
             getBPData();
         };
     }, []);
+
+    async function getUserData() {
+        try {
+            await axios.get('http://127.0.0.1:8000/accounts/login/', 
+                { headers: 
+                    {'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'} })
+                .then(response => {
+                    console.log(response);
+                    localStorage.setItem('first_name', response.data['first_name']);
+                    localStorage.setItem('username', response.data['username']);
+                })
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
+    async function getBPData() {
+        try {
+            await axios.get('http://127.0.0.1:8000/medprob/bp/', 
+                { headers: 
+                    {'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'} })
+                .then(response => {
+                    console.log(response);
+                    setBpAvgAll(response.data['all']);
+                    setBpAvgAM(response.data['am']);
+                    setBpAvgPM(response.data['pm']);
+                });
+        } catch (e) {
+            console.error(e)
+        }
+    }
 
     const submitDateRange = async e => {
         e.preventDefault();
@@ -259,6 +270,7 @@ export const BPHome = () => {
     return (
         <>
             <OuterWrapper>
+                <h1>My Blood Pressure</h1>
                 <div className="pageLinks">
                     <Link to="/medprob/bplist"><button className="link">BP readings list</button></Link>
                     <button className="link" type='button' onClick={handleAddNew}>Enter new BP reading</button>
@@ -285,16 +297,11 @@ export const BPHome = () => {
                         : null}
                 </div>
                 <InnerWrapper>
-                    <div className="BPHome">
-                        <h3>Average Blood Pressure</h3>
-                        <div className="display bg-gray-500">
-                            <div className='valueSys text-stone-100 border-b-8 border-stone-100'>{bpAvgAll.sys_avg}</div>
-                            <div className='valueDia text-stone-100'>{bpAvgAll.dia_avg}</div>
-                        </div>
-                        <div className="data">
-                            <p>mmHg. Calculated from <strong>{bpAvgAll.count}</strong> values since <strong>{bpAvgAll.first_date}</strong></p>
-                        </div>
-                        <form onSubmit={submitDateRange}>
+                    <div className='subtitleDiv'>
+                        <h3 className='subtitle'>Average Blood Pressure</h3>
+                    </div>
+                    <div className='formDiv'>
+                        <form className='form' onSubmit={submitDateRange}>
                             <label>Select data from last: </label>
                             <select value={rangeNum} onChange={e => setRangeNum(e.target.value)}>
                                 <option>-----</option>
@@ -334,28 +341,38 @@ export const BPHome = () => {
                             <button className='filterButton' type='submit'>Submit</button>
                         </form>
                     </div> 
+                    <div className='dataDisplay'>
+                        <div className='chartsAMPM'>
+                            <div>
+                                <h3>AM</h3>
+                                <div className='circle am'>
+                                    <div className='border-b-4 border-gray-950 mt-12'>{bpAvgAM.sys_avg}</div>
+                                    <div>{bpAvgAM.dia_avg}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="chartMain">
+                            <div className="display bg-gray-500">
+                                <div className='valueSys text-stone-100 border-b-8 border-stone-100'>{bpAvgAll.sys_avg}</div>
+                                <div className='valueDia text-stone-100'>{bpAvgAll.dia_avg}</div>
+                            </div>
+                            <div className="data">
+                                <p>mmHg. Calculated from <strong>{bpAvgAll.count}</strong> values since <strong>{bpAvgAll.first_date}</strong></p>
+                            </div>
+                        </div>
+                        <div className='chartsAMPM'>
+                            <div>
+                                <h3>PM</h3>
+                                <div className='circle pm'>
+                                    <div className='border-b-4 border-gray-950 mt-12'>{bpAvgPM.sys_avg}</div>
+                                    <div>{bpAvgPM.dia_avg}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </InnerWrapper>
-                <div className='chartsAMPM'>
-                    <div>
-                        <h3>AM</h3>
-                        <div className='circle am'>
-                            <div className='border-b-4 border-gray-950 mt-12'>{bpAvgAM.sys_avg}</div>
-                            <div>{bpAvgAM.dia_avg}</div>
-                        </div>
-                    </div>
-                    <div>
-                        <h3>PM</h3>
-                        <div className='circle pm'>
-                            <div className='border-b-4 border-gray-950 mt-12'>{bpAvgPM.sys_avg}</div>
-                            <div>{bpAvgPM.dia_avg}</div>
-                        </div>
-                    </div>
-                </div>
-                <div className='chart'>
-                    <Barchart dataset={chartData}/>
-                </div>
+                <Barchart dataset={chartData}/>
             </OuterWrapper>
-            <Meds />
         </>
     )
 }

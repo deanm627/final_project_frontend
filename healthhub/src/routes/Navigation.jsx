@@ -39,6 +39,8 @@ export default function Navigation() {
                                 {dropdown 
                                     ? <div className='absolute w-24'>
                                         <Link className='w-24 text-gray-800 bg-stone-100 block hover:bg-gray-800 hover:text-stone-100'to="/logout">My Account</Link> 
+                                        <Link className='w-24 text-gray-800 bg-stone-100 block hover:bg-gray-800 hover:text-stone-100' to="/medprob/bp">BP home</Link> 
+                                        <Link className='w-24 text-gray-800 bg-stone-100 block hover:bg-gray-800 hover:text-stone-100' to="/meds/">Med List</Link> 
                                         <Link className='w-24 text-gray-800 bg-stone-100 block hover:bg-gray-800 hover:text-stone-100' to="/logout">Logout</Link> 
                                      </div>
                                     : null

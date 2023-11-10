@@ -4,12 +4,12 @@ import './index.css'
 import {createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Navigation from './routes/Navigation';
 import Main from './components/Main';
-import { BPdetail, loader as bpDetailLoader } from './components/BPdetail';
 import { BPHome } from "./routes/BPhome";
 import { Login } from "./routes/Login";
 import { BPlist } from "./routes/BPlist";
 import { Logout } from './routes/Logout';
 import Register from './routes/Register';
+import Meds from './routes/Meds';
 import './interceptor/axios';
 
 const router = createBrowserRouter([
@@ -38,9 +38,8 @@ const router = createBrowserRouter([
         element: <BPHome />
       },
       {
-        path: "/medprob/bps/:bpId",
-        element: <BPdetail />,
-        loader: bpDetailLoader,
+        path: "/meds/",
+        element: <Meds />,
       },
       {
         path: "/logout",

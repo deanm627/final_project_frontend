@@ -1,6 +1,15 @@
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+import styled from 'styled-components';
+
+const OuterWrapper = styled.div`
+    border: 2px solid black;
+    margin: 40px auto;
+    background-color: #fafafa;
+    height: 300px;
+    width: 600px;
+`
 
 export default function Barchart({dataset}) {
     if (dataset) {
@@ -70,7 +79,9 @@ export default function Barchart({dataset}) {
         };
 
         return (
-            <Bar options={options} data={data} />
+            <OuterWrapper>
+                <Bar options={options} data={data} />
+            </OuterWrapper> 
         );
         }
 }

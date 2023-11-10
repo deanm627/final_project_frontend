@@ -1,9 +1,7 @@
 import { useState } from 'react';
-import axios from 'axios';
 
-export default function Meds() {
-    const [drugField, setDrugField] = useState([]);
-    const [strengths, setStrengths] = useState([]);
+export default function MedListAPI() {
+    
     try {
         new Def.Autocompleter.Prefetch('drug_strengths', []);
         new Def.Autocompleter.Search('rxterms',

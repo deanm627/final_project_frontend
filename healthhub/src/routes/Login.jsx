@@ -33,13 +33,11 @@ export const Login = () => {
         localStorage.clear();
         localStorage.setItem('access_token', data.access);
         localStorage.setItem('refresh_token', data.refresh);
-        // localStorage.setItem('user_id', data.user_id);
-        // localStorage.setItem('first_name', data.first_name);
         // axios.defaults.headers.common['Authorization'] = `Bearer ${data['access']}`;
         window.location.href = '/medprob/bp'
     }
    return (
-    <div className="flex justify-center items-center h-full">
+    <div className="flex justify-center items-center h-screen">
        <div className="w-full max-w-xs">
          <form className="bg-white border-2 border-gray-300 shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={submit}>
            <div className="mb-4">
