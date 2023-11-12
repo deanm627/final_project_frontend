@@ -1,5 +1,10 @@
 import { useState, useEffect} from 'react';
 import { Link, Outlet } from 'react-router-dom';
+import styled from 'styled-components';
+
+const OutletWrapper = styled.div`
+    display: flex;
+`
 
 export default function Navigation() {
     const [isAuth, setIsAuth] = useState(false);
@@ -50,7 +55,10 @@ export default function Navigation() {
                             <Link to="/login">Login</Link>}
                     </div>
             </div>
-            <Outlet />
+            <OutletWrapper>
+                <Outlet />
+            </OutletWrapper>
+            
         </>
     );
  }

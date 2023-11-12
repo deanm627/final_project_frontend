@@ -3,9 +3,10 @@ import { Link } from 'react-router-dom';
 import { BPedit } from '../components/BPedit';
 import axios from "axios";
 import styled from 'styled-components';
+import { ProgressCircle } from "../components/ProgressCircle";
 
 const OuterWrapper = styled.div`
-    margin: 40px;
+    margin: 20px;
     display: flex;
     flex-direction: column;
 
@@ -41,11 +42,13 @@ const OuterWrapper = styled.div`
         display: flex;
         justify-content: space-between;
         margin-bottom: 40px;
+        border-bottom: 2px solid black;
     }
 
     .link {
         border: 2px solid rgba(255, 255, 255, 0.87);
         padding: 10px;
+        margin-bottom: 10px;
     }
 
     .link:hover {
@@ -100,6 +103,12 @@ const OuterWrapper = styled.div`
     .filterButton:disabled {
         display: none;
     }
+
+    h1 {
+        font-size: 2.5rem;
+        font-weight: 500;
+        text-align: center;
+    }
 `
 
 export const BPlist = () => {
@@ -108,11 +117,11 @@ export const BPlist = () => {
     const [previousUrl, setPreviousUrl] = useState('');
     const [pageNum, setPageNum] = useState(1);
     const [pageTotal, setPageTotal] = useState([]);
-    const [bps, setBps] = useState([]);
     const [filter1, setFilter1] = useState('');
     const [filter2, setFilter2] = useState('');
     const [bpsFiltered, setBpsFiltered] = useState([]);
     const [addNew, setAddNew] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     const token = localStorage.getItem('access_token');
     const blankBP = {
@@ -148,8 +157,8 @@ export const BPlist = () => {
                     setPageTotal(Math.ceil(response.data.count/10));
                     setNextUrl(response.data.next);
                     setPreviousUrl(response.data.previous);
-                    setBps(response.data.results);
                     setBpsFiltered(response.data.results);
+                    setLoading(false);
                 });
         } catch (e) {
             console.error(e)
@@ -158,6 +167,7 @@ export const BPlist = () => {
 
     async function getBPFilteredData(e) {
         e.preventDefault()
+        setLoading(true);
         setPageNum(1);
         setPageTotal([]);
 
@@ -173,6 +183,7 @@ export const BPlist = () => {
                     setNextUrl(response.data.next);
                     setPreviousUrl(response.data.previous);
                     setBpsFiltered(response.data.results);
+                    setLoading(false);
                 });
         } catch (e) {
             console.error(e)
@@ -181,8 +192,6 @@ export const BPlist = () => {
 
     async function getPageData(e, url) {
         e.preventDefault()
-
-        console.log(url)
 
         try {
             await axios.get(url, 
@@ -196,6 +205,7 @@ export const BPlist = () => {
                     setNextUrl(response.data.next);
                     setPreviousUrl(response.data.previous);
                     setBpsFiltered(response.data.results);
+                    setLoading(false);
                 });
         } catch (e) {
             console.error(e)
@@ -203,9 +213,10 @@ export const BPlist = () => {
     }
 
     function handleReset() {
-        setFilter1('')
-        setFilter2('')
-        getBPData()
+        setFilter1('');
+        setFilter2('');
+        setLoading(true);
+        getBPData();
     }
 
     function handleAddNew() {
@@ -213,21 +224,24 @@ export const BPlist = () => {
     }
 
     function handlePrevious(e) {
+        setLoading(true);
         setPageNum(pageNum - 1);
         getPageData(e, previousUrl);
     }
 
     function handleNext(e) {
+        setLoading(true);
         setPageNum(pageNum + 1);
-        console.log(nextUrl);
         getPageData(e, nextUrl);
     }
 
     return (
         <>
             <OuterWrapper>
+                <h1>BP Readings List</h1>
                 <div className="pageLinks">
                     <Link to="/medprob/bp"><button className="link">BP Summary</button></Link>
+                    {loading ? <ProgressCircle /> : null}
                     <button 
                         type='button' 
                         className="link"

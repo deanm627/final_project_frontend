@@ -4,11 +4,17 @@ import MedListAPI from '../components/MedListAPI';
 import styled from 'styled-components';
 import axios from 'axios';
 import { MedEdit } from "../components/Mededit";
+import { ProgressCircle } from "../components/ProgressCircle";
+import LeftNav from '../components/Nav/LeftNav';
 
 const OuterWrapper = styled.div`
     margin: 20px;
     display: flex;
     flex-direction: column;
+
+    th {
+        width: 10%;
+    }
 
     th, tr {
         border-bottom: 1px solid;
@@ -36,7 +42,7 @@ const OuterWrapper = styled.div`
     
     .pageLinks {
         display: flex;
-        justify-content: flex-end;
+        justify-content: space-between;
         margin-bottom: 40px;
         border-bottom: 2px solid black;
     }
@@ -100,6 +106,14 @@ const OuterWrapper = styled.div`
         font-weight: 500;
         text-align: center;
     }
+
+    .hidden {
+        display: none;
+    }
+
+    .old {
+        background-color: #9ca3af;
+    }
 `
 
 export default function Meds() {
@@ -110,6 +124,8 @@ export default function Meds() {
     const [pageTotal, setPageTotal] = useState([]);
     const [meds, setMeds] = useState([]);
     const [addNew, setAddNew] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [showOld, setShowOld] = useState(false);
 
     const token = localStorage.getItem('access_token');
     const blankMed = {
@@ -122,8 +138,6 @@ export default function Meds() {
         'assoc_medprob': '',
         'note': '',
     }
-
-
 
     useEffect(() => {
         if (localStorage.getItem('access_token') === null) {
@@ -150,6 +164,7 @@ export default function Meds() {
                     setNextUrl(response.data.next);
                     setPreviousUrl(response.data.previous);
                     setMeds(response.data.results);
+                    setLoading(false);
                 });
         } catch (e) {
             console.error(e)
@@ -173,6 +188,7 @@ export default function Meds() {
                     setNextUrl(response.data.next);
                     setPreviousUrl(response.data.previous);
                     setMeds(response.data.results);
+                    setLoading(false);
                 });
         } catch (e) {
             console.error(e)
@@ -184,20 +200,29 @@ export default function Meds() {
     }
 
     function handlePrevious(e) {
+        setLoading(true);
         setPageNum(pageNum - 1);
         getPageData(e, previousUrl);
     }
 
     function handleNext(e) {
+        setLoading(true);
         setPageNum(pageNum + 1);
         getPageData(e, nextUrl);
     }
 
     return (
         <>
+            <LeftNav currentPage='medlist' />
             <OuterWrapper>
                 <h1>My Med List</h1>
                 <div className="pageLinks">
+                    {showOld 
+                    ?   <button className='link' onClick={(e) => setShowOld(!showOld)}>Hide Prior Meds</button>
+                    :   <button className='link' onClick={(e) => setShowOld(!showOld)}>Show Prior Meds</button>
+                    }
+                    
+                    {loading ? <ProgressCircle /> : null}
                     <button 
                         type='button' 
                         className="link"
@@ -228,9 +253,14 @@ export default function Meds() {
                                 : null
                             }
                             {meds?.map((med, index) => (
-                                <tr key={index}>
-                                    <MedEdit med={med} newOrEdit={false} defaultEdit={false} />
-                                </tr>
+                                med.end_date_num?
+                                    <tr key={index} className={showOld? 'old' : 'hidden'}>
+                                        <MedEdit med={med} newOrEdit={false} defaultEdit={false} />
+                                    </tr>
+                                : 
+                                    <tr key={index}>
+                                        <MedEdit med={med} newOrEdit={false} defaultEdit={false} />
+                                    </tr>
                             ))}
                         </tbody>
                         <tfoot>

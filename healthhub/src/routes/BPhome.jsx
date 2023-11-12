@@ -4,6 +4,8 @@ import { BPedit } from '../components/BPedit';
 import Barchart from '../components/Barchart';
 import axios from "axios";
 import styled from 'styled-components';
+import { ProgressCircle } from "../components/ProgressCircle";
+import LeftNav from '../components/Nav/LeftNav';
 
 const OuterWrapper = styled.div`
     margin: 20px;
@@ -188,6 +190,7 @@ export const BPHome = () => {
     const [rangeNum, setRangeNum] = useState('');
     const [rangeType, setRangeType] = useState('');
     const [addNew, setAddNew] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     const token = localStorage.getItem('access_token');
     const blankBP = {
@@ -204,26 +207,9 @@ export const BPHome = () => {
             window.location.href = '/login'
         }
         else {
-            getUserData();
             getBPData();
         };
     }, []);
-
-    async function getUserData() {
-        try {
-            await axios.get('http://127.0.0.1:8000/accounts/login/', 
-                { headers: 
-                    {'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'} })
-                .then(response => {
-                    console.log(response);
-                    localStorage.setItem('first_name', response.data['first_name']);
-                    localStorage.setItem('username', response.data['username']);
-                })
-        } catch (e) {
-            console.error(e)
-        }
-    }
 
     async function getBPData() {
         try {
@@ -236,6 +222,7 @@ export const BPHome = () => {
                     setBpAvgAll(response.data['all']);
                     setBpAvgAM(response.data['am']);
                     setBpAvgPM(response.data['pm']);
+                    setLoading(false);
                 });
         } catch (e) {
             console.error(e)
@@ -244,6 +231,7 @@ export const BPHome = () => {
 
     const submitDateRange = async e => {
         e.preventDefault();
+        setLoading(true);
 
         await axios.get(`http://127.0.0.1:8000/medprob/bp/?num=${rangeNum}&type=${rangeType}`, 
                        {headers: 
@@ -257,6 +245,7 @@ export const BPHome = () => {
                             setBpAvgPM(response.data['pm']);
                             setChartData(response.data['data_chart']);
                             console.log(response.data['data_chart']);
+                            setLoading(false);
                         } else {
                             // some error handling here
                         }
@@ -269,10 +258,12 @@ export const BPHome = () => {
 
     return (
         <>
+            <LeftNav currentPage='bp' />
             <OuterWrapper>
                 <h1>My Blood Pressure</h1>
                 <div className="pageLinks">
                     <Link to="/medprob/bplist"><button className="link">BP readings list</button></Link>
+                    {loading ? <ProgressCircle /> : null}
                     <button className="link" type='button' onClick={handleAddNew}>Enter new BP reading</button>
                 </div>
                 <div>

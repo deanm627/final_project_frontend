@@ -7,16 +7,21 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel }) => {
     const [route, setRoute] = useState(med.route);
     const [freq, setFreq] = useState(med.freq);
     const [startDate, setStartDate] = useState(med.start_date_num);
-    const [endDate, setEndDate] = useState('');
-    if (med.end_date_num) {
-        setEndDate(med.end_date_num);
-    }
+    const [endDate, setEndDate] = useState(checkEndDate());
     const [assocMedProb, setAssocMedProb] = useState(med.assoc_medprob);
     const [note, setNote] = useState(med.note);
     const [status, setStatus] = useState('');
     const [edit, setEdit] = useState(defaultEdit);
     const [neworEdit, setNeworEdit] = useState(newOrEdit);
 
+    function checkEndDate() {
+        if (med.end_date_num) {
+            return med.end_date_num;
+        } else {
+            return '';
+        }  
+    }
+    
     const token = localStorage.getItem('access_token');
 
     const createNew = async e => {
@@ -156,6 +161,28 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel }) => {
             </> 
             : 
             <>
+                {/* <td>
+                    <input 
+                            type='text'
+                            id="rxterms"
+                            name='name'
+                            value={name}
+                            required
+                            placeholder='Name'
+                            onChange={e => setName(e.target.value)} 
+                            onSelect={(val) => setName(val)} />
+                </td>
+                <td>
+                    <input 
+                            type='text'
+                            id="drug_strengths"
+                            name='dose'
+                            value={dose}
+                            required
+                            placeholder='Dose'
+                            onChange={e => setDose(e.target.value)} />
+                </td> */}
+                
                 <td>
                     <input 
                         type='text'
