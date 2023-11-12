@@ -3,11 +3,10 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const NavWrapper = styled.div`
-    background-color: #e0f2fe;
-    width: 15%;
+    background-color: #1f2937;
+    width: 16%;
     padding: 15px;
-    border-right: 1px solid navy;
-
+    color: #f5f5f4;
 
     .primary {
         font-size: 1.1rem;
@@ -18,14 +17,28 @@ const NavWrapper = styled.div`
     }
 
     .true {
-        color: #3b82f6;
-        font-weight: 500;
+        color: #4ade80;
+        font-weight: 600;
+    }
+
+    .false:hover {
+        background-color: #f5f5f4;
+        color: #1f2937;
+        padding: 0 10px;
+    }
+
+    .home {
+        font-size: 1.15rem;
+        color: #a5f3fc;
+        font-weight: 600;
     }
 `
 
 export default function LeftNav({currentPage}) {
     const [isOpen1, setIsOpen1] = useState(setOpen('bp'));
     const [isOpen2, setIsOpen2] = useState(setOpen('medlist'));
+
+    const firstname = localStorage.getItem('first_name');
 
     function setOpen(page) {
         if (currentPage === page) {
@@ -37,6 +50,9 @@ export default function LeftNav({currentPage}) {
     return (
         <NavWrapper>
             <div>
+                <div className='home'>
+                    <Link to="/medprob/bp" className='manageLink'>{firstname}'s HealthHub</Link>
+                </div>
                 <details open={isOpen1}>
                     <summary className='primary'>Medical Problems</summary>
                     <Link to="/medprob/bp" id='bp' className={`secondary ${isOpen1}`}>Blood Pressure</Link>

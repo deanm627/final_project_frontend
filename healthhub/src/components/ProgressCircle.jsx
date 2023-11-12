@@ -17,9 +17,9 @@ export function ProgressCircle() {
 export function ProgressTriangle() {
     return (
         <Triangle
-            height="80"
-            width="80"
-            color="#4fa94d"
+            height="40"
+            width="40"
+            color="#4ade80"
             ariaLabel="triangle-loading"
             wrapperStyle={{}}
             wrapperClassName=""

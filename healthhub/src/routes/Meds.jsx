@@ -11,6 +11,8 @@ const OuterWrapper = styled.div`
     margin: 20px;
     display: flex;
     flex-direction: column;
+    height: 100vh;
+    width: 80%;
 
     th {
         width: 10%;

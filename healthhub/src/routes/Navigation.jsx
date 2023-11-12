@@ -54,6 +54,9 @@ export default function Navigation() {
                         :
                             <Link to="/login">Login</Link>}
                     </div>
+                    <div>
+                        <button onClick={(e) => print()}>Print</button>
+                    </div>
             </div>
             <OutletWrapper>
                 <Outlet />

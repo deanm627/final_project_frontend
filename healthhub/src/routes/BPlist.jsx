@@ -4,9 +4,12 @@ import { BPedit } from '../components/BPedit';
 import axios from "axios";
 import styled from 'styled-components';
 import { ProgressCircle } from "../components/ProgressCircle";
+import LeftNav from '../components/Nav/LeftNav';
+import RightNav from '../components/Nav/RightNav';
 
 const OuterWrapper = styled.div`
     margin: 20px;
+    width: 68%;
     display: flex;
     flex-direction: column;
 
@@ -237,6 +240,7 @@ export const BPlist = () => {
 
     return (
         <>
+            <LeftNav currentPage='bp' />
             <OuterWrapper>
                 <h1>BP Readings List</h1>
                 <div className="pageLinks">
@@ -315,6 +319,7 @@ export const BPlist = () => {
                     </div>
                 </div>  
             </OuterWrapper>
+            <RightNav medprob='bp' />
         </>
     )
 }

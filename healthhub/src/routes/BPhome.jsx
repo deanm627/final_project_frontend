@@ -6,11 +6,13 @@ import axios from "axios";
 import styled from 'styled-components';
 import { ProgressCircle } from "../components/ProgressCircle";
 import LeftNav from '../components/Nav/LeftNav';
+import RightNav from '../components/Nav/RightNav';
 
 const OuterWrapper = styled.div`
     margin: 20px;
     display: flex;
     flex-direction: column;
+    width: 68%;
 
     th, tr {
         border-bottom: 1px solid;
@@ -43,7 +45,7 @@ const OuterWrapper = styled.div`
     .pageLinks {
         display: flex;
         justify-content: space-between;
-        margin-bottom: 40px;
+        margin-bottom: 10px;
         border-bottom: 2px solid black;
     }
 
@@ -364,6 +366,7 @@ export const BPHome = () => {
                 </InnerWrapper>
                 <Barchart dataset={chartData}/>
             </OuterWrapper>
+            <RightNav medprob='bp' />
         </>
     )
 }
