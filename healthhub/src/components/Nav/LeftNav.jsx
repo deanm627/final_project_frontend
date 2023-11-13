@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 const NavWrapper = styled.div`
     background-color: #1f2937;
-    width: 16%;
+    width: 14%;
     padding: 15px;
     color: #f5f5f4;
 
@@ -17,20 +17,25 @@ const NavWrapper = styled.div`
     }
 
     .true {
-        color: #4ade80;
+        color: #67e8f9;
         font-weight: 600;
+        font-style: italic;
     }
 
     .false:hover {
-        background-color: #f5f5f4;
-        color: #1f2937;
-        padding: 0 10px;
+        color: #67e8f9;
+        padding: 2px 10px;
+        font-size: 1.2rem;
     }
 
     .home {
-        font-size: 1.15rem;
+        text-align: center;
+        font-size: 1.3rem;
         color: #a5f3fc;
         font-weight: 600;
+        border-bottom: 5px dotted;
+        margin-bottom: 10px;
+        padding-bottom: 7px;
     }
 `
 
@@ -51,7 +56,7 @@ export default function LeftNav({currentPage}) {
         <NavWrapper>
             <div>
                 <div className='home'>
-                    <Link to="/medprob/bp" className='manageLink'>{firstname}'s HealthHub</Link>
+                    <Link to="/userhome" className='manageLink'>{firstname}'s HealthHub</Link>
                 </div>
                 <details open={isOpen1}>
                     <summary className='primary'>Medical Problems</summary>

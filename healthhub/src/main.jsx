@@ -10,6 +10,7 @@ import { BPlist } from "./routes/BPlist";
 import { Logout } from './routes/Logout';
 import Register from './routes/Register';
 import Meds from './routes/Meds';
+import Home from './routes/Home';
 import './interceptor/axios';
 
 const router = createBrowserRouter([
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
       {
         path: "/login",
         element: <Login />
+      },
+      {
+        path: "/userhome",
+        element: <Home />
       },
       {
         path: "/medprob/bplist",

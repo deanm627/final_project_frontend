@@ -9,7 +9,7 @@ import RightNav from '../components/Nav/RightNav';
 
 const OuterWrapper = styled.div`
     margin: 20px;
-    width: 68%;
+    width: 72%;
     display: flex;
     flex-direction: column;
 
@@ -35,8 +35,12 @@ const OuterWrapper = styled.div`
     }
 
     tr:hover {
-        background-color: rgba(255, 255, 255, 0.87);
-        color: black;
+        background-color: #f5f5f4;
+        color: #030712;
+    }
+
+    thead, tfoot {
+        background-color: #f5f5f4;
     }
 
     // tr:nth-child(even) {background-color: gray;}
@@ -45,23 +49,38 @@ const OuterWrapper = styled.div`
         display: flex;
         justify-content: space-between;
         margin-bottom: 40px;
-        border-bottom: 2px solid black;
+        border-bottom: 2px solid #030712;
     }
 
     .link {
-        border: 2px solid rgba(255, 255, 255, 0.87);
+        border-radius: 5px;
         padding: 10px;
         margin-bottom: 10px;
     }
 
-    .link:hover {
-        background-color: rgba(255, 255, 255, 0.87);
-        color: black;
+    .leftLink {
+        background-color: #f5f5f4;
+        border: 3px solid #030712;
+        font-weight: 600;
+        box-shadow: 5px 5px 5px gray;
     }
 
-    .BPListTable {
-        overflow-x: scroll;
-        border-bottom: none;
+    .leftLink:hover {
+        background-color: #1f2937;
+        color: #f5f5f4;
+    }
+
+    .newValue {
+        border: 3px solid rgba(255, 255, 255, 0.87);
+        background-color: #4ade80;
+        color: #064e3b;
+        font-weight: 700;
+        box-shadow: 5px 5px 5px gray;
+    }
+
+    .newValue:hover {
+        background-color: rgba(255, 255, 255, 0.87);
+        color: black;
     }
 
     .BPnumber {
@@ -75,6 +94,8 @@ const OuterWrapper = styled.div`
 
     .range {
         margin: 0 0 25px 0;
+        font-size: 1.15rem;
+        font-weight: 500;
     }
 
     .dateInput {
@@ -99,8 +120,11 @@ const OuterWrapper = styled.div`
     .pages {
         display: flex;
         justify-content: center;
+        align-items: center;
         padding: 10px;
         margin-right: 10px;
+        font-weight: 500;
+        font-size: 1.15rem;
     }
 
     .filterButton:disabled {
@@ -108,9 +132,10 @@ const OuterWrapper = styled.div`
     }
 
     h1 {
-        font-size: 2.5rem;
-        font-weight: 500;
+        font-size: 3rem;
+        font-weight: 200;
         text-align: center;
+        text-shadow: #a5f3fc 1px 0 10px;
     }
 `
 
@@ -244,11 +269,11 @@ export const BPlist = () => {
             <OuterWrapper>
                 <h1>BP Readings List</h1>
                 <div className="pageLinks">
-                    <Link to="/medprob/bp"><button className="link">BP Summary</button></Link>
+                    <Link to="/medprob/bp"><button className="link leftLink">BP Summary</button></Link>
                     {loading ? <ProgressCircle /> : null}
                     <button 
                         type='button' 
-                        className="link"
+                        className="link newValue"
                         onClick={handleAddNew}>
                         Add BP reading
                     </button>
@@ -268,7 +293,6 @@ export const BPlist = () => {
                     <button className='filterButton' type='submit'>Filter</button>
                     <button className='filterButton' type='submit' onClick={handleReset}>Reset</button>
                 </form>
-                <div className="BPListTable">
                     <table>
                         <thead>
                             <tr>
@@ -317,7 +341,6 @@ export const BPlist = () => {
                             disabled={pageNum === pageTotal}
                             >Next</button>
                     </div>
-                </div>  
             </OuterWrapper>
             <RightNav medprob='bp' />
         </>

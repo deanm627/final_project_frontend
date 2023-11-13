@@ -12,7 +12,7 @@ const OuterWrapper = styled.div`
     margin: 20px;
     display: flex;
     flex-direction: column;
-    width: 68%;
+    width: 72%;
 
     th, tr {
         border-bottom: 1px solid;
@@ -46,23 +46,38 @@ const OuterWrapper = styled.div`
         display: flex;
         justify-content: space-between;
         margin-bottom: 10px;
-        border-bottom: 2px solid black;
+        border-bottom: 2px solid #030712;
     }
 
     .link {
-        border: 2px solid rgba(255, 255, 255, 0.87);
+        border-radius: 5px;
         padding: 10px;
         margin-bottom: 10px;
     }
 
-    .link:hover {
-        background-color: rgba(255, 255, 255, 0.87);
-        color: black;
+    .leftLink {
+        background-color: #f5f5f4;
+        border: 3px solid #030712;
+        font-weight: 600;
+        box-shadow: 5px 5px 5px gray;
     }
 
-    .BPListTable {
-        overflow-x: scroll;
-        border-bottom: none;
+    .leftLink:hover {
+        background-color: #1f2937;
+        color: #f5f5f4;
+    }
+
+    .newValue {
+        border: 3px solid rgba(255, 255, 255, 0.87);
+        background-color: #4ade80;
+        color: #064e3b;
+        font-weight: 700;
+        box-shadow: 5px 5px 5px gray;
+    }
+
+    .newValue:hover {
+        background-color: rgba(255, 255, 255, 0.87);
+        color: black;
     }
 
     .BPnumber {
@@ -96,9 +111,10 @@ const OuterWrapper = styled.div`
     }
 
     h1 {
-        font-size: 2.5rem;
-        font-weight: 500;
+        font-size: 3rem;
+        font-weight: 200;
         text-align: center;
+        text-shadow: #a5f3fc 1px 0 10px;
     }
 `
 
@@ -193,6 +209,7 @@ export const BPHome = () => {
     const [rangeType, setRangeType] = useState('');
     const [addNew, setAddNew] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [showChart, setShowChart] = useState(false);
 
     const token = localStorage.getItem('access_token');
     const blankBP = {
@@ -234,6 +251,7 @@ export const BPHome = () => {
     const submitDateRange = async e => {
         e.preventDefault();
         setLoading(true);
+        setShowChart(false);
 
         await axios.get(`http://127.0.0.1:8000/medprob/bp/?num=${rangeNum}&type=${rangeType}`, 
                        {headers: 
@@ -248,6 +266,7 @@ export const BPHome = () => {
                             setChartData(response.data['data_chart']);
                             console.log(response.data['data_chart']);
                             setLoading(false);
+                            setShowChart(true);
                         } else {
                             // some error handling here
                         }
@@ -258,19 +277,35 @@ export const BPHome = () => {
         setAddNew(!addNew)
     }
 
+    function handleChange(e, type) {
+        setShowChart(false);
+        if (type === 'num') {
+            setRangeNum(e.target.value);
+            return
+        }
+        setRangeType(e.target.value);
+    }
+
+    function handleReset() {
+        setRangeNum('');
+        setRangeType('');
+        setLoading(true);
+        getBPData();
+    }
+
     return (
         <>
             <LeftNav currentPage='bp' />
             <OuterWrapper>
-                <h1>My Blood Pressure</h1>
+                <h1>BP Summary</h1>
                 <div className="pageLinks">
-                    <Link to="/medprob/bplist"><button className="link">BP readings list</button></Link>
+                    <Link to="/medprob/bplist"><button className="link leftLink">BP readings list</button></Link>
                     {loading ? <ProgressCircle /> : null}
-                    <button className="link" type='button' onClick={handleAddNew}>Enter new BP reading</button>
+                    <button className="link newValue" type='button' onClick={handleAddNew}>Enter new BP reading</button>
                 </div>
                 <div>
                     {addNew ? 
-                        <div className="BPListTable">
+                        <form>
                             <table>
                                 <thead>
                                     <tr>
@@ -286,7 +321,7 @@ export const BPHome = () => {
                                     </tr>
                                 </tbody>
                             </table>
-                        </div>
+                        </form>
                         : null}
                 </div>
                 <InnerWrapper>
@@ -296,7 +331,7 @@ export const BPHome = () => {
                     <div className='formDiv'>
                         <form className='form' onSubmit={submitDateRange}>
                             <label>Select data from last: </label>
-                            <select value={rangeNum} onChange={e => setRangeNum(e.target.value)}>
+                            <select value={rangeNum} onChange={(e) => handleChange(e, 'num')}>
                                 <option>-----</option>
                                 <option value='1'>1</option>
                                 <option value='2'>2</option>
@@ -311,27 +346,28 @@ export const BPHome = () => {
                                 <option value='11'>11</option>
                                 <option value='12'>12</option>
                             </select>
-                            <select value={rangeType} required onChange={e => setRangeType(e.target.value)}>
+                            <select value={rangeType} required onChange={(e) => handleChange(e, 'type')}>
                                 <option>-----</option>
                                 {rangeNum == 1 
                                     ?
                                     <>
-                                        <option value='day'>day</option>
-                                        <option value='week'>week</option>
-                                        <option value='month'>month</option>
-                                        <option value='year'>year</option>
+                                        <option value='Day'>day</option>
+                                        <option value='Week'>week</option>
+                                        <option value='Month'>month</option>
+                                        <option value='Year'>year</option>
                                     </>
                                     :   
                                     <>
-                                        <option value='day'>days</option>
-                                        <option value='week'>weeks</option>
-                                        <option value='month'>months</option>
-                                        <option value='year'>years</option>
+                                        <option value='Day'>days</option>
+                                        <option value='Week'>weeks</option>
+                                        <option value='Month'>months</option>
+                                        <option value='Year'>years</option>
                                     </>
                                 }
                                 
                             </select>
                             <button className='filterButton' type='submit'>Submit</button>
+                            <button className='filterButton' type='submit' onClick={handleReset}>Reset</button>
                         </form>
                     </div> 
                     <div className='dataDisplay'>
@@ -364,7 +400,7 @@ export const BPHome = () => {
                         </div>
                     </div>
                 </InnerWrapper>
-                <Barchart dataset={chartData}/>
+                {showChart? <Barchart dataset={chartData} timeInterval={rangeType} /> : null }
             </OuterWrapper>
             <RightNav medprob='bp' />
         </>

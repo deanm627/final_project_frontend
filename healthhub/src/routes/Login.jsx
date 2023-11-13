@@ -43,7 +43,7 @@ export const Login = () => {
         .then(response => {
           localStorage.setItem('first_name', response.data['first_name']);
           localStorage.setItem('username', response.data['username']);
-          window.location.href = '/medprob/bp'
+          window.location.href = "/userhome"
         })
     } catch (e) {
       console.error(e)

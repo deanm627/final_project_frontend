@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 const OutletWrapper = styled.div`
     display: flex;
+    height: 115vh;
 `
 
 export default function Navigation() {
@@ -33,7 +34,7 @@ export default function Navigation() {
                         <Link to="/">Home</Link>
                     </div>
                     <div className='hover:bg-gray-800 hover:text-stone-100 h-full p-2 flex justify-evenly items-center'>
-                        {isAuth ? <Link to="/medprob/bp">My HealthHub</Link> :
+                        {isAuth ? <Link to="/userhome">My HealthHub</Link> :
                             <Link to="/register">Register</Link>}
                     </div>
                     <div className='hover:bg-gray-800 hover:text-stone-100 h-full p-2 flex justify-evenly items-center'>

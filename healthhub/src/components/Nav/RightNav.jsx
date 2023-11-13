@@ -6,33 +6,39 @@ import { ProgressTriangle } from "../ProgressCircle";
 
 const NavWrapper = styled.div`
     background-color: #1f2937;
-    width: 16%;
+    width: 14%;
     padding: 15px;
     color: #f5f5f4;
 
     .primary {
-        font-size: 1.1rem;
+        font-size: 1.3rem;
     }
 
     .secondary {
+        font-size: 1.25rem;
         color: #4ade80;
         margin-left: 10px;
+        font-weight: 200;
     }
 
     list-style-type: square;
 
     .manage {
-        color: #a5f3fc;
+        color: #4ade80;
         display: flex;
         justify-content: flex-end;
         margin-bottom: 15px;
         font-size: 0.8rem;
+        font-weight: 500;
     }
 
     .manageLink:hover {
-        background-color: #f5f5f4;
-        color: #1f2937;
         font-size: 1rem;
+        color: #022c22;
+        border: 2px solid #022c22;
+        padding: 5px;
+        border-radius: 5px;
+        background-color: #f5f5f4;
     
     ProgressTriangle {
         background-color: blue;
@@ -58,7 +64,7 @@ export default function RightNav({medprob}) {
                     'Content-Type': 'application/json'} })
                 .then(response => {
                     console.log(response);
-                    setMedList(response.data.results);
+                    setMedList(response.data);
                     setLoading(false);
                 });
         } catch (e) {

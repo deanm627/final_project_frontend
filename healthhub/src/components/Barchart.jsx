@@ -11,7 +11,7 @@ const OuterWrapper = styled.div`
     width: 600px;
 `
 
-export default function Barchart({dataset}) {
+export default function Barchart({dataset, timeInterval}) {
     if (dataset) {
         const timeLabels = Object.keys(dataset);
         const sysData = [];
@@ -28,7 +28,7 @@ export default function Barchart({dataset}) {
                 },
                 title: {
                     display: true,
-                    text: "Average Blood Pressures over Time",
+                    text: "Average Blood Pressures by " + timeInterval,
                     font: {
                         size: 18,
                     }

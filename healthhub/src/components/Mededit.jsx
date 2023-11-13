@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import axios from "axios";
 
-export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel }) => {
+export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed, hideOrShowNote }) => {
     const [name, setName] = useState(med.name);
     const [dose, setDose] = useState(med.dose);
     const [route, setRoute] = useState(med.route);
@@ -144,122 +144,116 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel }) => {
             {!edit 
             ? 
             <>
-                <td>{med.name}</td>
-                <td>{med.dose}</td>
-                <td>{med.route}</td>
-                <td>{med.freq}</td>
-                <td>{med.start_date_str}</td>
-                <td>{med.end_date_str}</td>
-                <td>{med.assoc_medprob}</td>
-                <td>{med.note}</td>
-                <td>
-                    {neworEdit 
-                        ? null
-                        : <button type='button' className='editButton' onClick={() => setEdit(true)}>Edit</button>
-                    }
-                </td>
-            </> 
+                <tr className={`primaryRow ${hideOrShowMed}`}>
+                    <td>{med.name}</td>
+                    <td>{med.dose}</td>
+                    <td>{med.route}</td>
+                    <td>{med.freq}</td>
+                    <td>{med.start_date_str}</td>
+                    <td>{med.end_date_str}</td>
+                    <td>{med.assoc_medprob}</td>
+                    <td>
+                        {neworEdit 
+                            ? null
+                            : <button type='button' className='editButton' onClick={() => setEdit(true)}>Edit</button>
+                        }
+                    </td>
+                </tr> 
+                {med.note? 
+                    <tr className={`noteRow ${hideOrShowMed} ${hideOrShowNote}`}>
+                        <td colSpan='8'><strong>Notes: </strong>{med.note}</td>
+                    </tr>
+                    : null}
+            </>
             : 
             <>
-                {/* <td>
-                    <input 
+                <tr className='editRow'>
+                    <td>
+                        <input 
                             type='text'
-                            id="rxterms"
                             name='name'
                             value={name}
                             required
                             placeholder='Name'
-                            onChange={e => setName(e.target.value)} 
-                            onSelect={(val) => setName(val)} />
-                </td>
-                <td>
-                    <input 
+                            onChange={e => setName(e.target.value)} />
+                    </td>
+                    <td>
+                        <input
                             type='text'
-                            id="drug_strengths"
                             name='dose'
                             value={dose}
                             required
                             placeholder='Dose'
                             onChange={e => setDose(e.target.value)} />
-                </td> */}
-                
-                <td>
-                    <input 
-                        type='text'
-                        name='name'
-                        value={name}
-                        required
-                        placeholder='Name'
-                        onChange={e => setName(e.target.value)} />
-                </td>
-                <td>
-                    <input
-                        type='text'
-                        name='dose'
-                        value={dose}
-                        required
-                        placeholder='Dose'
-                        onChange={e => setDose(e.target.value)} />
-                </td>
-                <td>
-                    <input
-                        type='text'
-                        name='route'
-                        value={route}
-                        required
-                        onChange={e => setRoute(e.target.value)} />
-                </td>
-                <td>
-                    <input
-                        type='text'
-                        name='freq'
-                        value={freq}
-                        required
-                        onChange={e => setFreq(e.target.value)} />
-                </td>
-                <td>
-                    <input
-                        type='date'
-                        name='start_date'
-                        value={startDate}
-                        required
-                        onChange={e => setStartDate(e.target.value)} />
-                </td>
-                <td>
-                    <input
-                        type='date'
-                        name='end_date'
-                        value={endDate}
-                        onChange={e => setEndDate(e.target.value)} />
-                </td>
-                <td>
-                    <input
-                        type='text'
-                        name='assoc_medprob'
-                        value={assocMedProb}
-                        onChange={e => setAssocMedProb(e.target.value)} />
-                </td>
-                <td>
-                    <input
-                        type='text'
-                        name='note'
-                        value={note}
-                        onChange={e => setNote(e.target.value)} />
-                </td>
-                <td>
-                    {neworEdit 
-                        ? null
-                        : <button type='button' className='editButton' onClick={handleCancel}>Cancel</button>
-                    }
-                    {neworEdit 
-                        ? <button type='submit' className='editButton' onClick={(e) => createNew(e)}>Save</button>
-                        : <button type='submit' className='editButton' onClick={(e) => saveChange(e)}>Save</button>
-                    }
-                    {neworEdit 
-                        ? <button type='button' className='editButton' onClick={newCancel}>Cancel</button>
-                        : <button type='button' className='editButton' onClick={(e) => deleteBP(e)}>Delete</button>
-                    }
-                </td>
+                    </td>
+                    <td>
+                        <select name='route' value={route} required onChange={e => setRoute(e.target.value)} >
+                            <option>Oral</option>
+                            <option>Intramuscular</option>
+                            <option>Other</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name='freq' value={freq} required onChange={e => setFreq(e.target.value)} >
+                            <option>Once daily</option>
+                            <option>Once nightly</option>
+                            <option>Twice daily</option>
+                            <option>Every 12 hours</option>
+                            <option>Three times daily</option>
+                            <option>Every 8 hours</option>
+                            <option>Four times daily</option>
+                            <option>Every 6 hours</option>
+                            <option>Other</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input
+                            type='date'
+                            name='start_date'
+                            value={startDate}
+                            required
+                            onChange={e => setStartDate(e.target.value)} />
+                    </td>
+                    <td>
+                        <input
+                            type='date'
+                            name='end_date'
+                            value={endDate}
+                            onChange={e => setEndDate(e.target.value)} />
+                    </td>
+                    <td>
+                        <input
+                            type='text'
+                            name='assoc_medprob'
+                            value={assocMedProb}
+                            onChange={e => setAssocMedProb(e.target.value)} />
+                    </td>
+                    <td className='editFieldButtons'>
+                        {neworEdit 
+                            ? null
+                            : <button type='button' className='editButton editFieldButton' onClick={handleCancel}>Cancel</button>
+                        }
+                        {neworEdit 
+                            ? <button type='submit' className='editButton editFieldButton' onClick={(e) => createNew(e)}>Save</button>
+                            : <button type='submit' className='editButton editFieldButton' onClick={(e) => saveChange(e)}>Save</button>
+                        }
+                        {neworEdit 
+                            ? <button type='button' className='editButton editFieldButton' onClick={newCancel}>Cancel</button>
+                            : <button type='button' className='editButton editFieldButton' onClick={(e) => deleteBP(e)}>Delete</button>
+                        }
+                    </td>
+                </tr>
+                <tr className='editRow'>
+                    <td colSpan='8' className='noteField'>
+                        <strong><label htmlFor='notes'>Notes: </label></strong>
+                        <textarea rows='3' cols='50'
+                            id='notes'
+                            name='note'
+                            value={note}
+                            placeholder='Notes'
+                            onChange={e => setNote(e.target.value)}></textarea>
+                    </td>
+                </tr>
             </>
             }
         

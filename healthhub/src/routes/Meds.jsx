@@ -12,13 +12,9 @@ const OuterWrapper = styled.div`
     display: flex;
     flex-direction: column;
     height: 100vh;
-    width: 80%;
+    width: 86%;
 
-    th {
-        width: 10%;
-    }
-
-    th, tr {
+    th, tr.noteRow {
         border-bottom: 1px solid;
     }    
 
@@ -35,34 +31,56 @@ const OuterWrapper = styled.div`
         text-align: center;
     }
 
-    tr:hover {
-        background-color: rgba(255, 255, 255, 0.87);
-        color: black;
+    td.noteField textarea {
+        vertical-align: top;
+        margin-bottom: 10px;
     }
 
-    // tr:nth-child(even) {background-color: gray;}
+    tr:hover {
+        background-color: #f5f5f4;
+        color: #030712;
+    }
+
+    thead, tfoot {
+        background-color: #f5f5f4;
+    }
     
     .pageLinks {
         display: flex;
         justify-content: space-between;
         margin-bottom: 40px;
-        border-bottom: 2px solid black;
+        border-bottom: 2px solid #030712;
     }
 
     .link {
-        border: 2px solid rgba(255, 255, 255, 0.87);
+        border-radius: 5px;
         padding: 10px;
         margin-bottom: 10px;
     }
 
-    .link:hover {
-        background-color: rgba(255, 255, 255, 0.87);
-        color: black;
+    .leftLink {
+        background-color: #f5f5f4;
+        border: 3px solid #030712;
+        font-weight: 600;
+        box-shadow: 5px 5px 5px gray;
     }
 
-    .MedListTable {
-        overflow-x: scroll;
-        border-bottom: none;
+    .leftLink:hover {
+        background-color: #1f2937;
+        color: #f5f5f4;
+    }
+
+    .newValue {
+        border: 3px solid rgba(255, 255, 255, 0.87);
+        background-color: #4ade80;
+        color: #064e3b;
+        font-weight: 700;
+        box-shadow: 5px 5px 5px gray;
+    }
+
+    .newValue:hover {
+        background-color: rgba(255, 255, 255, 0.87);
+        color: black;
     }
 
     button {
@@ -88,7 +106,7 @@ const OuterWrapper = styled.div`
         color: #f5f5f4;
     }
 
-    input {
+    input, select {
         border: 1px solid #1f2937;
     }
 
@@ -104,30 +122,57 @@ const OuterWrapper = styled.div`
     }
 
     h1 {
-        font-size: 2.5rem;
-        font-weight: 500;
+        font-size: 3rem;
+        font-weight: 200;
         text-align: center;
+        text-shadow: #a5f3fc 1px 0 10px;
     }
 
     .hidden {
         display: none;
     }
 
-    .old {
+    .visible {
         background-color: #9ca3af;
+    }
+
+    .noteRow.visible {
+        background-color: #d1d5db;
+        height: 50px;
+    }
+
+    .editRow {
+        background-color: #0891b250;
+        color: #083344;
+    }
+
+    .editRow:hover {
+        background-color: #0891b250;
+        color: #083344;
+    }
+
+    .editFieldButton {
+        background-color: white;
+        margin: 4px;
+    }
+
+    .editFieldButtons {
+        display: flex;
+    }
+
+    .showNoteButtonDiv {
+        margin-bottom: 5px;
+        margin-left: 5px;
     }
 `
 
 export default function Meds() {
-    const [listCount, setListCount] = useState('');
-    const [nextUrl, setNextUrl] = useState('');
-    const [previousUrl, setPreviousUrl] = useState('');
-    const [pageNum, setPageNum] = useState(1);
-    const [pageTotal, setPageTotal] = useState([]);
-    const [meds, setMeds] = useState([]);
+    const [currentMeds, setCurrentMeds] = useState([]);
+    const [oldMeds, setOldMeds] = useState([]);
     const [addNew, setAddNew] = useState(false);
     const [loading, setLoading] = useState(true);
     const [showOld, setShowOld] = useState(false);
+    const [showNotes, setShowNotes] = useState(false);
 
     const token = localStorage.getItem('access_token');
     const blankMed = {
@@ -151,8 +196,6 @@ export default function Meds() {
     }, []);
 
     async function getMedData() {
-        setPageNum(1);
-        setPageTotal([]);
         
         try {
             await axios.get('http://127.0.0.1:8000/meds/meds/', 
@@ -161,35 +204,8 @@ export default function Meds() {
                     'Content-Type': 'application/json'} })
                 .then(response => {
                     console.log(response);
-                    setListCount(response.data.count);
-                    setPageTotal(Math.ceil(response.data.count/10));
-                    setNextUrl(response.data.next);
-                    setPreviousUrl(response.data.previous);
-                    setMeds(response.data.results);
-                    setLoading(false);
-                });
-        } catch (e) {
-            console.error(e)
-        }
-    }
-
-    async function getPageData(e, url) {
-        e.preventDefault()
-
-        console.log(url)
-
-        try {
-            await axios.get(url, 
-                { headers: 
-                    {'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'} })
-                .then(response => {
-                    console.log(response);
-                    setListCount(response.data.count);
-                    setPageTotal(Math.ceil(response.data.count/10));
-                    setNextUrl(response.data.next);
-                    setPreviousUrl(response.data.previous);
-                    setMeds(response.data.results);
+                    setCurrentMeds(response.data.current);
+                    setOldMeds(response.data.old);
                     setLoading(false);
                 });
         } catch (e) {
@@ -201,18 +217,6 @@ export default function Meds() {
         setAddNew(!addNew);
     }
 
-    function handlePrevious(e) {
-        setLoading(true);
-        setPageNum(pageNum - 1);
-        getPageData(e, previousUrl);
-    }
-
-    function handleNext(e) {
-        setLoading(true);
-        setPageNum(pageNum + 1);
-        getPageData(e, nextUrl);
-    }
-
     return (
         <>
             <LeftNav currentPage='medlist' />
@@ -220,85 +224,62 @@ export default function Meds() {
                 <h1>My Med List</h1>
                 <div className="pageLinks">
                     {showOld 
-                    ?   <button className='link' onClick={(e) => setShowOld(!showOld)}>Hide Prior Meds</button>
-                    :   <button className='link' onClick={(e) => setShowOld(!showOld)}>Show Prior Meds</button>
+                    ?   <button className='link leftLink' onClick={(e) => setShowOld(!showOld)}>Hide Prior Meds</button>
+                    :   <button className='link leftLink' onClick={(e) => setShowOld(!showOld)}>Show Prior Meds</button>
                     }
-                    
                     {loading ? <ProgressCircle /> : null}
                     <button 
                         type='button' 
-                        className="link"
+                        className="link newValue"
                         onClick={handleAddNew}>
                         Add Medicine
                     </button>
                 </div>
-                <div className="MedListTable">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Dose</th>
-                                <th>Route</th>
-                                <th>Frequency</th>
-                                <th>Start Date</th>
-                                <th>End Date</th>
-                                <th>Associated Medical Problems</th>
-                                <th>Notes</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {addNew ?
-                                <tr>
-                                    <MedEdit med={blankMed} newOrEdit={true} defaultEdit={true} newCancel={handleAddNew}/>
-                                </tr>
-                                : null
-                            }
-                            {meds?.map((med, index) => (
-                                med.end_date_num?
-                                    <tr key={index} className={showOld? 'old' : 'hidden'}>
-                                        <MedEdit med={med} newOrEdit={false} defaultEdit={false} />
-                                    </tr>
-                                : 
-                                    <tr key={index}>
-                                        <MedEdit med={med} newOrEdit={false} defaultEdit={false} />
-                                    </tr>
-                            ))}
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>Values: <strong>{meds.length} of {listCount}</strong></td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                    <div className='pages'>
-                        <button 
-                            type='submit' 
-                            className='filterButton' 
-                            value={previousUrl}
-                            onClick={(e) => handlePrevious(e)}
-                            disabled={pageNum === 1}
-                            >Previous</button>
-                        <div>Page {pageNum} of {pageTotal} </div>
-                        <button 
-                            type='submit' 
-                            className='filterButton' 
-                            value={nextUrl}
-                            onClick={(e) => handleNext(e)}
-                            disabled={pageNum === pageTotal}
-                            >Next</button>
-                    </div>
-                </div>  
+                <div className='showNoteButtonDiv'>
+                    {showNotes
+                    ?   <button type='button' className='editButton' onClick={(e) => setShowNotes(!showNotes)}>Hide Notes</button>
+                    :   <button type='button' className='editButton' onClick={(e) => setShowNotes(!showNotes)}>Show Notes</button>
+                    } 
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Dose</th>
+                            <th>Route</th>
+                            <th>Frequency</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Associated Medical Problems</th>
+                            <th></th>
+                        </tr>
+                    </thead>    
+                    <tbody>
+                        {addNew ?
+                            <MedEdit med={blankMed} newOrEdit={true} defaultEdit={true} newCancel={handleAddNew}/>
+                            : null
+                        }
+                        {currentMeds?.map((med, index) => (
+                            <MedEdit med={med} newOrEdit={false} defaultEdit={false} key={index} hideOrShowMed={true} hideOrShowNote={showNotes? 'visible' : 'hidden'}/>
+                        ))}
+                        {oldMeds?.map((med, index) => (
+                            <MedEdit med={med} newOrEdit={false} defaultEdit={false} key={index} hideOrShowMed={showOld? 'visible' : 'hidden'} hideOrShowNote={showNotes? 'visible' : 'hidden'}/>
+                        ))}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>Values: <strong>{showOld? (oldMeds.length + currentMeds.length) : currentMeds.length}</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
             </OuterWrapper>
-            {/* <MedListAPI /> */}
         </>
     )
 }
