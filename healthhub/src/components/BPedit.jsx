@@ -2,13 +2,13 @@ import { useState } from 'react';
 import axios from "axios";
 
 export const BPedit = ({ bp, newOrEdit, defaultEdit, newCancel }) => {
-    const [systolic, setSystolic] = useState(bp.systolic);
-    const [diastolic, setDiastolic] = useState(bp.diastolic);
-    const [date, setDate] = useState(bp.date_num);
-    const [time, setTime] = useState(bp.time_num);
+    const [systolic, setSystolic] = useState('');
+    const [diastolic, setDiastolic] = useState('');
+    const [date, setDate] = useState('');
+    const [time, setTime] = useState('');
     const [status, setStatus] = useState('');
     const [edit, setEdit] = useState(defaultEdit);
-    const [neworEdit, setNeworEdit] = useState(newOrEdit)
+    const [neworEdit, setNeworEdit] = useState(newOrEdit);
 
     const token = localStorage.getItem('access_token');
 
@@ -23,7 +23,6 @@ export const BPedit = ({ bp, newOrEdit, defaultEdit, newCancel }) => {
         bodyFormData.append('time_num', time);
         bodyFormData.append('time_str', time);
 
-        // Create the POST request
         await axios.post('http://127.0.0.1:8000/medprob/bps/', bodyFormData, 
                        {headers: 
                             {'Authorization': `Bearer ${token}`,
@@ -106,6 +105,14 @@ export const BPedit = ({ bp, newOrEdit, defaultEdit, newCancel }) => {
         setTime(bp.time_num);
     }
 
+    const setValues = () => {
+        setEdit(true);
+        setSystolic(bp.systolic);
+        setDiastolic(bp.diastolic);
+        setDate(bp.date_num);
+        setTime(bp.time_num);
+    }
+
     return (
         <>
             {!edit 
@@ -117,7 +124,7 @@ export const BPedit = ({ bp, newOrEdit, defaultEdit, newCancel }) => {
                 <td>
                     {neworEdit 
                         ? null
-                        : <button type='button' className='editButton' onClick={() => setEdit(true)}>Edit</button>
+                        : <button type='button' className='editButton' onClick={setValues}>Edit</button>
                     }
                 </td>
             </tr> 

@@ -162,6 +162,7 @@ export const BPlist = () => {
     const [bps, setBps] = useState([]);
     const [addNew, setAddNew] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [status, setStatus] = useState('');
 
     const token = localStorage.getItem('access_token');
     const blankBP = {
@@ -275,6 +276,17 @@ export const BPlist = () => {
         getPageData(e, nextUrl);
     }
 
+    function handleStatus(status) {
+        if (status == 201) {
+            setStatus(status);
+            setTimeout(() => { 
+                window.location.reload();
+            }, 1500);
+        } else {
+            setStatus(status);
+        }
+    }
+
     return (
         <>
             <LeftNav currentPage='bp' />
@@ -305,6 +317,12 @@ export const BPlist = () => {
                     <button className='filterButton' type='submit'>Filter</button>
                     <button className='filterButton' type='submit' onClick={handleReset}>Reset</button>
                 </form>
+                <div>
+                    {status == 201 ?
+                        <div className='success mb-4 text-emerald-700 text-xl text-center'>BP reading successfully entered.</div> : null}
+                    {status == 400 ?
+                        <div className='failure mb-4 text-rose-700 text-xl text-center'>An error occured.</div> : null}
+                </div>
                     <table>
                         <thead>
                             <tr>
@@ -316,11 +334,11 @@ export const BPlist = () => {
                         </thead>
                         <tbody>
                             {addNew ?
-                                <BPedit bp={blankBP} newOrEdit={true} defaultEdit={true} newCancel={handleAddNew}/>
+                                <BPedit bp={blankBP} newOrEdit={true} defaultEdit={true} newCancel={handleAddNew} />
                                 : null
                             }
                             {bps?.map((bp, index) => (
-                                    <BPedit key={index} bp={bp} newOrEdit={false} defaultEdit={false} />
+                                <BPedit key={index} bp={bp} newOrEdit={false} defaultEdit={false} />
                             ))}
                         </tbody>
                         <tfoot>

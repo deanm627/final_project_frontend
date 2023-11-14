@@ -11,6 +11,7 @@ import { Logout } from './routes/Logout';
 import Register from './routes/Register';
 import Meds from './routes/Meds';
 import Home from './routes/Home';
+import AccountHome from './routes/AccountHome';
 import './interceptor/axios';
 
 const router = createBrowserRouter([
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
       {
         path: "/meds/",
         element: <Meds />,
+      },
+      {
+        path: "/myaccount/",
+        element: <AccountHome />,
       },
       {
         path: "/logout",

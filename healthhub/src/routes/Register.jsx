@@ -45,7 +45,6 @@ export default function Register() {
         bodyFormData.append('password', password);
         bodyFormData.append('email', email);
 
-        // Create the POST requuest
         await axios.post('http://127.0.0.1:8000/accounts/register/',
                        bodyFormData, 
                        {headers: 
@@ -63,19 +62,17 @@ export default function Register() {
                             setStatus(response.status)
                             setTimeout(() => { 
                                 window.location.href = '/login'
-                            }, 1000);
+                            }, 1500);
                         } else {
                             setReason(response.response.data)
                             setStatus(response.response.status)
                         }
                        });
-
-       // Redirect after submission.      
-    //    window.location.href = '/login'
    }
 
     return (
-        <div className="flex justify-center items-center h-screen w-screen">
+        <div className="flex flex-col justify-center items-center h-screen w-screen">
+            <h1 className="text-gray-700 text-5xl mb-4 font-extralight">Registration</h1>
             <div className="w-full max-w-lg">
                 <form className="registerForm bg-white border-2 border-gray-300 shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={submit}>
                     <div className="mb-4">
@@ -130,11 +127,11 @@ export default function Register() {
                     </div>
                     <button className="bg-transparent hover:bg-emerald-500 text-emerald-600 font-semibold hover:text-white py-2 px-4 border border-emerald-500 hover:border-transparent rounded" type='submit'>Submit</button>
                     {status == 201
-                        ? <p className='success'>User successfully created. <br></br>
+                        ? <p className='success mt-4 text-emerald-600'>User successfully created. <br></br>
                             You will be re-directed to the login page</p>
                         : null}
                     {status == 400 ?
-                        <p className='failure'>{reason}</p> : null}
+                        <p className='failure mt-4 text-rose-700'>{reason}</p> : null}
                 </form>
             </div>
         </div>

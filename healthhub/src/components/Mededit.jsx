@@ -1,31 +1,23 @@
 import { useState } from 'react';
 import axios from "axios";
 
-export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed, hideOrShowNote }) => {
-    const [name, setName] = useState(med.name);
-    const [dose, setDose] = useState(med.dose);
-    const [route, setRoute] = useState(med.route);
-    const [freq, setFreq] = useState(med.freq);
-    const [startDate, setStartDate] = useState(med.start_date_num);
-    const [endDate, setEndDate] = useState(checkEndDate());
-    const [assocMedProb, setAssocMedProb] = useState(med.assoc_medprob);
-    const [note, setNote] = useState(med.note);
-    const [status, setStatus] = useState('');
+export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed, hideOrShowNote, statusChange }) => {
+    const [name, setName] = useState('');
+    const [dose, setDose] = useState('');
+    const [route, setRoute] = useState('');
+    const [freq, setFreq] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+    const [assocMedProb, setAssocMedProb] = useState('');
+    const [note, setNote] = useState('');
     const [edit, setEdit] = useState(defaultEdit);
     const [neworEdit, setNeworEdit] = useState(newOrEdit);
-
-    function checkEndDate() {
-        if (med.end_date_num) {
-            return med.end_date_num;
-        } else {
-            return '';
-        }  
-    }
     
     const token = localStorage.getItem('access_token');
 
     const createNew = async e => {
         e.preventDefault();
+        console.log(name, dose, route, freq, startDate);
         if (name === '' | dose === '' | route === '' | freq === '' | startDate === '') {
             alert('empty fields')
             return
@@ -43,7 +35,6 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
         bodyFormData.append('assoc_medprob', assocMedProb);
         bodyFormData.append('note', note);
 
-        // Create the POST request
         await axios.post('http://127.0.0.1:8000/meds/meds/', bodyFormData, 
                        {headers: 
                             {'Authorization': `Bearer ${token}`,
@@ -53,16 +44,16 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
                        .then(response => {
                         console.log(response)
                         if (response.status == 201) {
-                            setStatus(response.status)
-                            window.location.reload()
+                            {statusChange(response.status)};
                         } else {
-                            setStatus(response.response.status)
+                            {statusChange(response.response.status)};
                         }
                        });
     }
 
     const saveChange = async e => {
         e.preventDefault();
+        
         if (name === '' | dose === '' | route === '' | freq === '' | startDate === '') {
             alert('empty fields')
             return
@@ -80,7 +71,6 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
         bodyFormData.append('assoc_medprob', assocMedProb);
         bodyFormData.append('note', note);
 
-        // PUT request
         await axios.put(`http://127.0.0.1:8000/meds/meds/${med.id}/`,
             bodyFormData,
             {
@@ -94,11 +84,9 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
             .then(response => {
                 console.log(response)
                 if (response.status == 200) {
-                    setStatus(response.status)
-                    window.location.reload()
-                    
+                    {statusChange(response.status)};
                 } else {
-                    setStatus(response.response.status)
+                    {statusChange(response.response.status)};
                 }
             });
     }
@@ -117,7 +105,7 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
             { withCredentials: true })
             .then(response => {
                 console.log(response)
-                setStatus(response.status)
+                statusChange(response.status)
                 if (response.status == 204) {
                     window.location.reload()
                 }
@@ -131,12 +119,29 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
         setRoute(med.route);
         setFreq(med.freq);
         setStartDate(med.start_date_num);
-        setEndDate('');
-        if (med.end_date_num) {
-            setEndDate(med.end_date_num);
-        }
         setAssocMedProb(med.assoc_medprob);
         setNote(med.note);
+        if (med.end_date_num) {
+            setEndDate(med.end_date_num);
+            return
+        }
+        setEndDate('');
+    }
+
+    const setValues = () => {
+        setEdit(true);
+        setName(med.name);
+        setDose(med.dose);
+        setRoute(med.route);
+        setFreq(med.freq);
+        setStartDate(med.start_date_num);
+        setAssocMedProb(med.assoc_medprob);
+        setNote(med.note);
+        if (med.end_date_num) {
+            setEndDate(med.end_date_num);
+            return
+        }
+        setEndDate('');
     }
 
     return (
@@ -155,7 +160,7 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
                     <td>
                         {neworEdit 
                             ? null
-                            : <button type='button' className='editButton' onClick={() => setEdit(true)}>Edit</button>
+                            : <button type='button' className='editButton' onClick={setValues}>Edit</button>
                         }
                     </td>
                 </tr> 
@@ -188,6 +193,7 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
                     </td>
                     <td>
                         <select name='route' value={route} required onChange={e => setRoute(e.target.value)} >
+                            <option>------</option>
                             <option>Oral</option>
                             <option>Intramuscular</option>
                             <option>Other</option>
@@ -195,6 +201,7 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
                     </td>
                     <td>
                         <select name='freq' value={freq} required onChange={e => setFreq(e.target.value)} >
+                            <option>------</option>
                             <option>Once daily</option>
                             <option>Once nightly</option>
                             <option>Twice daily</option>
@@ -256,14 +263,6 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
                 </tr>
             </>
             }
-        
-            {/* 
-                        {status == 201 ?
-                            <p className='success'>BP reading successfully entered.</p> : null}
-                        {status == 400 ?
-                            <p className='failure'>An error occured.</p> : null}
-                     */}
-            
         </>
     )
 }

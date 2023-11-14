@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
-import MedListAPI from '../components/MedListAPI';
 import styled from 'styled-components';
 import axios from 'axios';
 import { MedEdit } from "../components/Mededit";
@@ -186,6 +185,7 @@ export default function Meds() {
     const [loading, setLoading] = useState(true);
     const [showOld, setShowOld] = useState(false);
     const [showNotes, setShowNotes] = useState(false);
+    const [status, setStatus] = useState('');
 
     const token = localStorage.getItem('access_token');
     const blankMed = {
@@ -193,8 +193,8 @@ export default function Meds() {
         'dose': '',
         'route': '',
         'frequency': '',
-        'start_date': '',
-        'end_date': '',
+        'start_date_num': '',
+        'end_date_num': '',
         'assoc_medprob': '',
         'note': '',
     }
@@ -230,6 +230,17 @@ export default function Meds() {
         setAddNew(!addNew);
     }
 
+    function handleStatus(status) {
+        if (status == 201 || status == 200) {
+            setStatus(status);
+            setTimeout(() => { 
+                window.location.reload()
+            }, 1500);
+        } else {
+            setStatus(status);
+        }
+    }
+
     return (
         <>
             <LeftNav currentPage='medlist' />
@@ -254,6 +265,14 @@ export default function Meds() {
                     :   <button type='button' className='editButton' onClick={(e) => setShowNotes(!showNotes)}>Show Notes</button>
                     } 
                 </div>
+                <div>
+                    {status == 201 ?
+                        <div className='success mb-4 text-emerald-700 text-xl text-center'>Medicine successfully entered.</div> : null}
+                    {status == 200 ?
+                        <div className='success mb-4 text-emerald-700 text-xl text-center'>Medicine successfully updated.</div> : null}
+                    {status == 400 ?
+                        <div className='failure mb-4 text-rose-700 text-xl text-center'>An error occured.</div> : null}
+                </div>
                 <table>
                     <thead>
                         <tr>
@@ -269,14 +288,14 @@ export default function Meds() {
                     </thead>    
                     <tbody>
                         {addNew ?
-                            <MedEdit med={blankMed} newOrEdit={true} defaultEdit={true} newCancel={handleAddNew}/>
+                            <MedEdit med={blankMed} newOrEdit={true} defaultEdit={true} newCancel={handleAddNew} statusChange={handleStatus}/>
                             : null
                         }
                         {currentMeds?.map((med, index) => (
-                            <MedEdit med={med} newOrEdit={false} defaultEdit={false} key={index} hideOrShowNote={showNotes? 'visibleNote' : 'hiddenNote'}/>
+                            <MedEdit med={med} newOrEdit={false} defaultEdit={false} key={index} hideOrShowNote={showNotes? 'visibleNote' : 'hiddenNote'} statusChange={handleStatus}/>
                         ))}
                         {oldMeds?.map((med, index) => (
-                            <MedEdit med={med} newOrEdit={false} defaultEdit={false} key={index} hideOrShowMed={showOld? 'visibleOld' : 'hiddenOld'} hideOrShowNote={showNotes? 'visibleNote' : 'hiddenNote'}/>
+                            <MedEdit med={med} newOrEdit={false} defaultEdit={false} key={index} hideOrShowMed={showOld? 'visibleOld' : 'hiddenOld'} hideOrShowNote={showNotes? 'visibleNote' : 'hiddenNote'} statusChange={handleStatus}/>
                         ))}
                     </tbody>
                     <tfoot>

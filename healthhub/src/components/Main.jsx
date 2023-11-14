@@ -12,6 +12,7 @@ const OuterWrapper = styled.div`
         font-size: 7rem;
         font-weight: 500;
         margin: 0;
+        text-shadow: #67e8f9 5px 0 20px;
     }
     
     h2 {

@@ -6,7 +6,7 @@ import { ProgressTriangle } from "../ProgressCircle";
 
 const NavWrapper = styled.div`
     background-color: #1f2937;
-    width: 14%;
+    width: 16%;
     padding: 15px;
     color: #f5f5f4;
     border-left: 10px double white;
@@ -47,7 +47,7 @@ const NavWrapper = styled.div`
 `
 
 export default function RightNav({medprob}) {
-    const [medList, setMedList] = useState([]);
+    const [medList, setMedList] = useState(['null']);
     const [loading, setLoading] = useState(false);
     const token = localStorage.getItem('access_token');
 
@@ -85,6 +85,10 @@ export default function RightNav({medprob}) {
                     {medList?.map((med, index) => (
                         <li className='secondary' key={index}>{med.name}</li>
                     ))}
+                    {medList.length === 0 ? 
+                        <li className='secondary'>None</li>
+                        : null
+                    }
                 </details>
             </div>
         </NavWrapper>

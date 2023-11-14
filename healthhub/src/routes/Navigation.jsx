@@ -94,7 +94,7 @@ export default function Navigation() {
                     <div className="dropdown">
                         <button className='dropdownButton' type='button'>{username}</button>
                         <div className='dropdownContent'>
-                            <Link className='dropdownContentLink' to="/logout">My Account</Link> 
+                            <Link className='dropdownContentLink' to="/myaccount/">My Account</Link> 
                             <Link className='dropdownContentLink' to="/logout">Logout</Link> 
                         </div>
                     </div>

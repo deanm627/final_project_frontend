@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 const NavWrapper = styled.div`
     background-color: #1f2937;
-    width: 14%;
+    width: 16%;
     padding: 15px;
     color: #f5f5f4;
     border-right: 10px double white;

@@ -4,6 +4,8 @@ import { useState } from "react";
 export const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [status, setStatus] = useState('');
+  const [reason, setReason] = useState('');
 
   const submit = async e => {
     e.preventDefault();
@@ -12,20 +14,23 @@ export const Login = () => {
       password: password
     };
 
-    const { data } = await
-      axios.post('http://127.0.0.1:8000/token/',
+    try {
+      const { data } = await axios.post('http://127.0.0.1:8000/token/',
         user,
         {
           headers:
             { 'Content-Type': 'application/json' }
         },
         { withCredentials: true });
-
-
-    localStorage.clear();
-    localStorage.setItem('access_token', data.access);
-    localStorage.setItem('refresh_token', data.refresh);
-    getUserData();
+      localStorage.clear();
+      localStorage.setItem('access_token', data.access);
+      localStorage.setItem('refresh_token', data.refresh);
+      getUserData();
+    } catch (e) {
+      console.error(e);
+      setStatus(401);
+      setReason('Incorrect username or password.');
+    }
   }
 
   async function getUserData() {
@@ -51,7 +56,8 @@ export const Login = () => {
   }
 
   return (
-    <div className="flex justify-center items-center h-screen w-screen">
+    <div className="flex flex-col justify-center items-center h-screen w-screen">
+      <h1 className="text-gray-700 text-5xl mb-4 font-extralight">Login</h1>
       <div className="w-full max-w-xs">
         <form className="bg-white border-2 border-gray-300 shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={submit}>
           <div className="mb-4">
@@ -81,6 +87,8 @@ export const Login = () => {
               Submit
             </button>
           </div>
+          {status == 401 ?
+            <p className='failure mt-4 text-rose-700'>{reason}</p> : null}
         </form>
       </div>
     </div>
