@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { ProgressCircle } from "../components/ProgressCircle";
 import LeftNav from '../components/Nav/LeftNav';
 import styled from 'styled-components';
+import { BPform } from '../components/BPform';
 
 const OuterWrapper = styled.div`
     width: 86%;
@@ -49,6 +50,11 @@ const OuterWrapper = styled.div`
         color: #064e3b;
         font-weight: 700;
     }
+
+    .bpFormDiv {
+        display: flex;
+        justify-content: center;
+    }
 `
 
 export default function Home() {
@@ -67,7 +73,10 @@ export default function Home() {
                 <div className='buttons'>
                     <Link to="/medprob/bp" className='button'>Blood Pressure Summary</Link>
                     <Link to="/meds/" className='button'>My Med List</Link>
-                    <Link to='' className='button'>Add BP reading</Link>
+                    <button className='button'>Add BP reading</button>
+                </div>
+                <div className='bpFormDiv'>
+                    {/* <BPform /> */}
                 </div>
             </OuterWrapper>
         </>

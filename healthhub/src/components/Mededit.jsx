@@ -144,7 +144,7 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
             {!edit 
             ? 
             <>
-                <tr className={`primaryRow ${hideOrShowMed}`}>
+                <tr className={`displayRow ${hideOrShowMed}`}>
                     <td>{med.name}</td>
                     <td>{med.dose}</td>
                     <td>{med.route}</td>
@@ -243,7 +243,7 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
                         }
                     </td>
                 </tr>
-                <tr className='editRow'>
+                <tr className='editRow editRowNote'>
                     <td colSpan='8' className='noteField'>
                         <strong><label htmlFor='notes'>Notes: </label></strong>
                         <textarea rows='3' cols='50'

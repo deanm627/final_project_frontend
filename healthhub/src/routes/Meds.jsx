@@ -14,11 +14,12 @@ const OuterWrapper = styled.div`
     height: 100vh;
     width: 86%;
 
-    th, tr.noteRow {
-        border-bottom: 1px solid;
+    th, tr {
+        border-top: 1px solid;
     }    
 
     table {
+        background-color: #f5f5f4;
         width: 100%;
         border-collapse: collapse;
     }
@@ -36,13 +37,12 @@ const OuterWrapper = styled.div`
         margin-bottom: 10px;
     }
 
-    tr:hover {
-        background-color: #f5f5f4;
-        color: #030712;
+    .displayRow:hover {
+        background-color: #ddd;
     }
 
     thead, tfoot {
-        background-color: #f5f5f4;
+        background-color: #9ca3af;
     }
     
     .pageLinks {
@@ -96,9 +96,13 @@ const OuterWrapper = styled.div`
     }
 
     .filterButton, .editButton {
-        border: 1px solid black;
+        background-color: #f5f5f4;
+        border: 2px solid #030712;
+        color: #030712;
+        font-size: 1.1rem;
+        font-weight: 400;
         border-radius: 5px;
-        padding: 2px 8px;
+        padding: 0 8px;
     }
 
     .filterButton:hover, .editButton:hover {
@@ -128,17 +132,22 @@ const OuterWrapper = styled.div`
         text-shadow: #a5f3fc 1px 0 10px;
     }
 
-    .hidden {
+    .hiddenOld, .hiddenNote {
         display: none;
     }
 
-    .visible {
-        background-color: #9ca3af;
+    .visibleOld {
+        background-color: #d1d5db;
     }
 
-    .noteRow.visible {
+    .visibleOld.visibleNote {
         background-color: #d1d5db;
+    }
+
+    .visibleNote {
+        background-color: #f5f5f4;
         height: 50px;
+        border-top: none;
     }
 
     .editRow {
@@ -151,6 +160,10 @@ const OuterWrapper = styled.div`
         color: #083344;
     }
 
+    .editRow.editRowNote {
+        border-top: none;
+    }
+
     .editFieldButton {
         background-color: white;
         margin: 4px;
@@ -161,7 +174,7 @@ const OuterWrapper = styled.div`
     }
 
     .showNoteButtonDiv {
-        margin-bottom: 5px;
+        margin-bottom: 10px;
         margin-left: 5px;
     }
 `
@@ -260,10 +273,10 @@ export default function Meds() {
                             : null
                         }
                         {currentMeds?.map((med, index) => (
-                            <MedEdit med={med} newOrEdit={false} defaultEdit={false} key={index} hideOrShowMed={true} hideOrShowNote={showNotes? 'visible' : 'hidden'}/>
+                            <MedEdit med={med} newOrEdit={false} defaultEdit={false} key={index} hideOrShowNote={showNotes? 'visibleNote' : 'hiddenNote'}/>
                         ))}
                         {oldMeds?.map((med, index) => (
-                            <MedEdit med={med} newOrEdit={false} defaultEdit={false} key={index} hideOrShowMed={showOld? 'visible' : 'hidden'} hideOrShowNote={showNotes? 'visible' : 'hidden'}/>
+                            <MedEdit med={med} newOrEdit={false} defaultEdit={false} key={index} hideOrShowMed={showOld? 'visibleOld' : 'hiddenOld'} hideOrShowNote={showNotes? 'visibleNote' : 'hiddenNote'}/>
                         ))}
                     </tbody>
                     <tfoot>

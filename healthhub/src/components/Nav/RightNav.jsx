@@ -9,6 +9,7 @@ const NavWrapper = styled.div`
     width: 14%;
     padding: 15px;
     color: #f5f5f4;
+    border-left: 10px double white;
 
     .primary {
         font-size: 1.3rem;

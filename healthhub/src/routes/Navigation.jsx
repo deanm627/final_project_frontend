@@ -7,9 +7,67 @@ const OutletWrapper = styled.div`
     height: 115vh;
 `
 
+const NavWrapper = styled.div`
+    display: flex;
+    justify-content: space-evenly;
+    box-shadow: 0 0 10px gray;
+    font-size: 1.2rem;
+    font-weight: 450;
+    height: 50px;
+    background-color: #f5f5f4;
+
+    .navButton {
+        display: flex;
+        align-items: center; 
+        padding: 0 10px;
+    }
+
+    .navButton:hover {
+        background-color: #1f2937;;
+        color: #f5f5f4;
+    }
+
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdownContent {
+        display: none;
+        position: absolute;
+        background-color: #f1f1f1;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+
+    .dropdownContentLink {
+        color: #030712;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+    .dropdownContentLink:hover {
+        background-color: #ddd;
+        color: #0891b2;
+    }
+
+    .dropdown:hover .dropdownContent {display: block;}
+
+    .dropdown:hover .dropdownButton {
+        background-color: #1f2937;;
+        color: #f5f5f4;
+    }
+
+    .dropdownButton {
+        height: 50px;
+        padding: 0 10px;
+    }
+`
+
 export default function Navigation() {
     const [isAuth, setIsAuth] = useState(false);
-    const [dropdown, setDropdown] = useState(false);
 
     const username = localStorage.getItem('username');
 
@@ -19,46 +77,31 @@ export default function Navigation() {
         }
     }, [isAuth]);
 
-    const handleMouseEnter = () => {
-        setDropdown(true);
-    };
-    
-    const handleMouseLeave = () => {
-        setDropdown(false);
-    };
 
     return (
-        <>
-            <div className='h-12 flex justify-evenly items-center bg-stone-100'>
-                    <div className='hover:bg-gray-800 hover:text-stone-100 h-full p-2 flex justify-evenly items-center'>
-                        <Link to="/">Home</Link>
+        <>  <NavWrapper>
+                <Link className='navButton' to="/">HealthHub</Link>
+                {isAuth 
+                    ?   <Link className='navButton' to="/userhome">My HealthHub</Link>
+                    :   <Link className='navButton' to="/register">Register</Link>
+                }
+                {isAuth 
+                    ?   <button className='navButton' onClick={(e) => print()}>Print</button>
+                    :   null
+                }
+                {isAuth 
+                ?
+                    <div className="dropdown">
+                        <button className='dropdownButton' type='button'>{username}</button>
+                        <div className='dropdownContent'>
+                            <Link className='dropdownContentLink' to="/logout">My Account</Link> 
+                            <Link className='dropdownContentLink' to="/logout">Logout</Link> 
+                        </div>
                     </div>
-                    <div className='hover:bg-gray-800 hover:text-stone-100 h-full p-2 flex justify-evenly items-center'>
-                        {isAuth ? <Link to="/userhome">My HealthHub</Link> :
-                            <Link to="/register">Register</Link>}
-                    </div>
-                    <div className='hover:bg-gray-800 hover:text-stone-100 h-full p-2 flex justify-evenly items-center'>
-                        {isAuth 
-                        ?
-                            <div className="relative inline-block" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-                                <button type='button'>{username}</button>
-                                {dropdown 
-                                    ? <div className='absolute w-24'>
-                                        <Link className='w-24 text-gray-800 bg-stone-100 block hover:bg-gray-800 hover:text-stone-100'to="/logout">My Account</Link> 
-                                        <Link className='w-24 text-gray-800 bg-stone-100 block hover:bg-gray-800 hover:text-stone-100' to="/medprob/bp">BP home</Link> 
-                                        <Link className='w-24 text-gray-800 bg-stone-100 block hover:bg-gray-800 hover:text-stone-100' to="/meds/">Med List</Link> 
-                                        <Link className='w-24 text-gray-800 bg-stone-100 block hover:bg-gray-800 hover:text-stone-100' to="/logout">Logout</Link> 
-                                     </div>
-                                    : null
-                                }
-                            </div>
-                        :
-                            <Link to="/login">Login</Link>}
-                    </div>
-                    <div>
-                        <button onClick={(e) => print()}>Print</button>
-                    </div>
-            </div>
+                :
+                    <Link className='navButton' to="/login">Login</Link>
+                }
+            </NavWrapper>
             <OutletWrapper>
                 <Outlet />
             </OutletWrapper>

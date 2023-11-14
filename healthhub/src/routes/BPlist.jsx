@@ -18,6 +18,7 @@ const OuterWrapper = styled.div`
     }    
 
     table {
+        background-color: #f5f5f4;
         width: 100%;
         border-collapse: collapse;
     }
@@ -34,16 +35,13 @@ const OuterWrapper = styled.div`
         text-align: center;
     }
 
-    tr:hover {
-        background-color: #f5f5f4;
-        color: #030712;
+    .displayRow:hover {
+        background-color: #ddd;
     }
 
     thead, tfoot {
-        background-color: #f5f5f4;
+        background-color: #9ca3af;
     }
-
-    // tr:nth-child(even) {background-color: gray;}
     
     .pageLinks {
         display: flex;
@@ -103,9 +101,13 @@ const OuterWrapper = styled.div`
     }
 
     .filterButton, .editButton {
-        border: 1px solid black;
+        background-color: #f5f5f4;
+        border: 2px solid #030712;
+        color: #030712;
+        font-size: 1.1rem;
+        font-weight: 400;
         border-radius: 5px;
-        padding: 2px 8px;
+        padding: 0 8px;
     }
 
     .filterButton:hover, .editButton:hover {
@@ -137,6 +139,16 @@ const OuterWrapper = styled.div`
         text-align: center;
         text-shadow: #a5f3fc 1px 0 10px;
     }
+
+    .editRow {
+        background-color: #0891b250;
+        color: #083344;
+    }
+
+    .editRow:hover {
+        background-color: #0891b250;
+        color: #083344;
+    }
 `
 
 export const BPlist = () => {
@@ -147,7 +159,7 @@ export const BPlist = () => {
     const [pageTotal, setPageTotal] = useState([]);
     const [filter1, setFilter1] = useState('');
     const [filter2, setFilter2] = useState('');
-    const [bpsFiltered, setBpsFiltered] = useState([]);
+    const [bps, setBps] = useState([]);
     const [addNew, setAddNew] = useState(false);
     const [loading, setLoading] = useState(true);
 
@@ -185,7 +197,7 @@ export const BPlist = () => {
                     setPageTotal(Math.ceil(response.data.count/10));
                     setNextUrl(response.data.next);
                     setPreviousUrl(response.data.previous);
-                    setBpsFiltered(response.data.results);
+                    setBps(response.data.results);
                     setLoading(false);
                 });
         } catch (e) {
@@ -210,7 +222,7 @@ export const BPlist = () => {
                     setPageTotal(Math.ceil(response.data.count/10));
                     setNextUrl(response.data.next);
                     setPreviousUrl(response.data.previous);
-                    setBpsFiltered(response.data.results);
+                    setBps(response.data.results);
                     setLoading(false);
                 });
         } catch (e) {
@@ -232,7 +244,7 @@ export const BPlist = () => {
                     setPageTotal(Math.ceil(response.data.count/10));
                     setNextUrl(response.data.next);
                     setPreviousUrl(response.data.previous);
-                    setBpsFiltered(response.data.results);
+                    setBps(response.data.results);
                     setLoading(false);
                 });
         } catch (e) {
@@ -304,15 +316,11 @@ export const BPlist = () => {
                         </thead>
                         <tbody>
                             {addNew ?
-                                <tr>
-                                    <BPedit bp={blankBP} newOrEdit={true} defaultEdit={true} newCancel={handleAddNew}/>
-                                </tr>
+                                <BPedit bp={blankBP} newOrEdit={true} defaultEdit={true} newCancel={handleAddNew}/>
                                 : null
                             }
-                            {bpsFiltered?.map((bp, index) => (
-                                <tr key={index}>
-                                    <BPedit bp={bp} newOrEdit={false} defaultEdit={false} />
-                                </tr>
+                            {bps?.map((bp, index) => (
+                                    <BPedit key={index} bp={bp} newOrEdit={false} defaultEdit={false} />
                             ))}
                         </tbody>
                         <tfoot>
@@ -320,7 +328,7 @@ export const BPlist = () => {
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td>Values: <strong>{bpsFiltered.length} of {listCount}</strong></td>
+                                <td>Values: <strong>{bps.length} of {listCount}</strong></td>
                             </tr>
                         </tfoot>
                     </table>

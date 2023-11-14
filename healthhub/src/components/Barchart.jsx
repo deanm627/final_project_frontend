@@ -6,9 +6,10 @@ import styled from 'styled-components';
 const OuterWrapper = styled.div`
     border: 2px solid black;
     margin: 40px auto;
-    background-color: #fafafa;
+    background-color: white;
     height: 300px;
     width: 600px;
+    box-shadow: 5px 5px 5px gray;
 `
 
 export default function Barchart({dataset, timeInterval}) {
@@ -30,7 +31,7 @@ export default function Barchart({dataset, timeInterval}) {
                     display: true,
                     text: "Average Blood Pressures by " + timeInterval,
                     font: {
-                        size: 18,
+                        size: 20,
                     }
                 },
             },

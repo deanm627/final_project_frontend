@@ -110,7 +110,7 @@ export const BPedit = ({ bp, newOrEdit, defaultEdit, newCancel }) => {
         <>
             {!edit 
             ? 
-            <>
+            <tr className='displayRow'>
                 <td>{bp.systolic}/{bp.diastolic}</td>
                 <td>{bp.date_str}</td>
                 <td>{bp.time_str}</td>
@@ -120,9 +120,9 @@ export const BPedit = ({ bp, newOrEdit, defaultEdit, newCancel }) => {
                         : <button type='button' className='editButton' onClick={() => setEdit(true)}>Edit</button>
                     }
                 </td>
-            </> 
+            </tr> 
             : 
-            <>
+            <tr className='editRow'>
                 <td>
                     <input 
                         className='BPnumber'
@@ -173,7 +173,7 @@ export const BPedit = ({ bp, newOrEdit, defaultEdit, newCancel }) => {
                         : <button type='button' className='editButton' onClick={(e) => deleteBP(e)}>Delete</button>
                     }
                 </td>
-            </>
+            </tr>
             }
         
             {/* 

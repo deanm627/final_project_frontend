@@ -18,9 +18,14 @@ const OuterWrapper = styled.div`
         border-bottom: 1px solid;
     }    
 
+    thead {
+        background-color: #f5f5f4;
+    }
+
     table {
         width: 100%;
         border-collapse: collapse;
+        margin-bottom: 10px;
     }
 
     tr {
@@ -39,8 +44,6 @@ const OuterWrapper = styled.div`
         background-color: rgba(255, 255, 255, 0.87);
         color: black;
     }
-
-    // tr:nth-child(even) {background-color: gray;}
     
     .pageLinks {
         display: flex;
@@ -90,9 +93,13 @@ const OuterWrapper = styled.div`
     }
 
     .filterButton, .editButton {
-        border: 1px solid black;
+        background-color: #f5f5f4;
+        border: 2px solid #030712;
+        color: #030712;
+        font-size: 1.1rem;
+        font-weight: 400;
         border-radius: 5px;
-        padding: 2px 8px;
+        padding: 0 8px;
     }
 
     .filterButton:hover, .editButton:hover {
@@ -106,8 +113,8 @@ const OuterWrapper = styled.div`
 
     h3 {
         text-align: center;
-        font-size: 1.7rem;
-        font-weight: 400;
+        font-size: 2rem;
+        font-weight: 500;
     }
 
     h1 {
@@ -115,6 +122,16 @@ const OuterWrapper = styled.div`
         font-weight: 200;
         text-align: center;
         text-shadow: #a5f3fc 1px 0 10px;
+    }
+
+    .editRow {
+        background-color: #0891b250;
+        color: #083344;
+    }
+
+    .editRow:hover {
+        background-color: #0891b250;
+        color: #083344;
     }
 `
 
@@ -129,12 +146,14 @@ const InnerWrapper = styled.div`
     }
 
     h3.subtitle {
-        font-size: 2rem;
+        font-size: 2.2rem;
         text-align: center;
     }
 
     .display {
-        border: 1px solid white;
+        background: linear-gradient(0.25turn, #0891b2, white, #0891b2);
+        color: #030712;
+        border: 3px solid #0891b2;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -166,9 +185,9 @@ const InnerWrapper = styled.div`
     }
 
     .circle {
-        width: 225px;
-        height: 225px;
-        line-height: 60px;
+        width: 200px;
+        height: 200px;
+        line-height: 48px;
         border-radius: 50%;
         font-size: 50px;
         color: #030712;
@@ -177,14 +196,15 @@ const InnerWrapper = styled.div`
         display: flex;
         flex-direction: column;
         align-items: center;
+        box-shadow: 0 0 10px gray;
     }    
 
     .circle.am { 
-        border: 3px solid #fde047;
+        border: 4px solid #fde047;
     }
 
     .circle.pm { 
-        border: 3px solid #881337;
+        border: 4px solid #881337;
     }
 
     .formDiv {
@@ -192,6 +212,8 @@ const InnerWrapper = styled.div`
         justify-content: center;
         margin-bottom: 10px;
         margin-top: 10px;
+        font-size: 1.15rem;
+        font-weight: 500;
     }
 
     select {
@@ -316,9 +338,7 @@ export const BPHome = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <BPedit bp={blankBP} newOrEdit={true} defaultEdit={true} newCancel={handleAddNew} />
-                                    </tr>
+                                    <BPedit bp={blankBP} newOrEdit={true} defaultEdit={true} newCancel={handleAddNew} />
                                 </tbody>
                             </table>
                         </form>
@@ -381,9 +401,9 @@ export const BPHome = () => {
                             </div>
                         </div>
                         <div className="chartMain">
-                            <div className="display bg-gray-500">
-                                <div className='valueSys text-stone-100 border-b-8 border-stone-100'>{bpAvgAll.sys_avg}</div>
-                                <div className='valueDia text-stone-100'>{bpAvgAll.dia_avg}</div>
+                            <div className="display">
+                                <div className='valueSys border-b-8 border-gray-950'>{bpAvgAll.sys_avg}</div>
+                                <div className='valueDia '>{bpAvgAll.dia_avg}</div>
                             </div>
                             <div className="data">
                                 <p>mmHg. Calculated from <strong>{bpAvgAll.count}</strong> values since <strong>{bpAvgAll.first_date}</strong></p>

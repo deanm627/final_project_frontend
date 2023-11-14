@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 const OuterWrapper = styled.div`
     height: 95vh;
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
