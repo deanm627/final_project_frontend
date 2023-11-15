@@ -26,10 +26,14 @@ export default function Barchart({dataset, timeInterval}) {
                 legend: {
                     display: true,
                     position: 'bottom',
+                    labels: {
+                        color: '#030712',
+                    } 
                 },
                 title: {
                     display: true,
                     text: "Average Blood Pressures by " + timeInterval,
+                    color: '#030712',
                     font: {
                         size: 20,
                     }
@@ -37,9 +41,13 @@ export default function Barchart({dataset, timeInterval}) {
             },
             scales: {
                 y: {
+                    ticks: {
+                        color: '#030712',
+                    },
                     title: {
                         display: true,
-                        text: 'Average BP (mmHg)'
+                        text: 'Average BP (mmHg)',
+                        color: '#030712',
                     },
                     grid: {
                         color: function(context) {
@@ -58,6 +66,11 @@ export default function Barchart({dataset, timeInterval}) {
                             return 1
                         }
                         },
+                },
+                x: {
+                    ticks: {
+                        color: '#030712',
+                    }
                 }
             }
         };

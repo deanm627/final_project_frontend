@@ -1,20 +1,26 @@
 import { useState } from 'react';
 import axios from "axios";
 
-export const BPedit = ({ bp, newOrEdit, defaultEdit, newCancel }) => {
+export const BPedit = ({ bp, newOrEdit, defaultEdit, newCancel, statusChange }) => {
     const [systolic, setSystolic] = useState('');
     const [diastolic, setDiastolic] = useState('');
     const [date, setDate] = useState('');
     const [time, setTime] = useState('');
-    const [status, setStatus] = useState('');
     const [edit, setEdit] = useState(defaultEdit);
     const [neworEdit, setNeworEdit] = useState(newOrEdit);
+    const [required, setRequired] = useState(['default', 'default', 'default', 'default']);
 
     const token = localStorage.getItem('access_token');
 
     const createNew = async e => {
         e.preventDefault();
 
+        if (systolic === '' | diastolic === '' | date === '' | time === '' ) {
+            fieldCheck();
+            alert("Please enter all required fields");
+            return;
+        }
+
         const bodyFormData = new FormData();
         bodyFormData.append('systolic', systolic);
         bodyFormData.append('diastolic', diastolic);
@@ -23,28 +29,32 @@ export const BPedit = ({ bp, newOrEdit, defaultEdit, newCancel }) => {
         bodyFormData.append('time_num', time);
         bodyFormData.append('time_str', time);
 
-        await axios.post('http://127.0.0.1:8000/medprob/bps/', bodyFormData, 
-                       {headers: 
-                            {'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'multipart/form-data'}
-                       },
-                       {withCredentials: true})
-                       .then(response => {
-                        console.log(response)
-                        if (response.status == 201) {
-                            setStatus(response.status)
-                            window.location.reload()
-                        } else {
-                            setStatus(response.response.status)
-                        }
-                       });
-        
-        
+        await axios.post('http://127.0.0.1:8000/medprob/bps/', 
+            bodyFormData, 
+            {headers: 
+                {'Authorization': `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data'}
+            },
+            {withCredentials: true})
+            .then(response => {
+                console.log(response)
+                if (response.status == 201) {
+                    {statusChange(response.status)};
+                } else {
+                    {statusChange(response.response.status)};
+                }
+            });
     }
 
     const saveChange = async e => {
         e.preventDefault();
 
+        if (systolic === '' | diastolic === '' | date === '' | time === '' ) {
+            fieldCheck();
+            alert("Please enter all required fields");
+            return;
+        }
+
         const bodyFormData = new FormData();
         bodyFormData.append('systolic', systolic);
         bodyFormData.append('diastolic', diastolic);
@@ -53,7 +63,6 @@ export const BPedit = ({ bp, newOrEdit, defaultEdit, newCancel }) => {
         bodyFormData.append('time_num', time);
         bodyFormData.append('time_str', time);
 
-        // PUT request
         await axios.put(`http://127.0.0.1:8000/medprob/bps/${bp.id}/`,
             bodyFormData,
             {
@@ -67,11 +76,9 @@ export const BPedit = ({ bp, newOrEdit, defaultEdit, newCancel }) => {
             .then(response => {
                 console.log(response)
                 if (response.status == 200) {
-                    setStatus(response.status)
-                    window.location.reload()
-                    
+                    {statusChange(response.status)};
                 } else {
-                    setStatus(response.response.status)
+                    {statusChange(response.response.status)};
                 }
             });
     }
@@ -90,7 +97,6 @@ export const BPedit = ({ bp, newOrEdit, defaultEdit, newCancel }) => {
             { withCredentials: true })
             .then(response => {
                 console.log(response)
-                setStatus(response.status)
                 if (response.status == 204) {
                     window.location.reload()
                 }
@@ -103,6 +109,7 @@ export const BPedit = ({ bp, newOrEdit, defaultEdit, newCancel }) => {
         setDiastolic(bp.diastolic);
         setDate(bp.date_num);
         setTime(bp.time_num);
+        setRequired(['default', 'default', 'default', 'default', 'default']);
     }
 
     const setValues = () => {
@@ -111,6 +118,21 @@ export const BPedit = ({ bp, newOrEdit, defaultEdit, newCancel }) => {
         setDiastolic(bp.diastolic);
         setDate(bp.date_num);
         setTime(bp.time_num);
+    }
+
+    const fieldCheck = () => {
+        const fields = [systolic, diastolic, date, time];
+        const newArr = [];
+        fields.forEach((field, index) => {
+            console.log(field, index)
+            if (field === '') {
+                newArr[index] = 'required';
+            } else {
+                newArr[index] = '';
+            }
+        })
+        console.log(newArr);
+        setRequired(newArr);
     }
 
     return (
@@ -132,7 +154,7 @@ export const BPedit = ({ bp, newOrEdit, defaultEdit, newCancel }) => {
             <tr className='editRow'>
                 <td>
                     <input 
-                        className='BPnumber'
+                        className={`BPnumber ${required[0]}`}
                         type='number'
                         name='systolic'
                         value={systolic}
@@ -141,7 +163,7 @@ export const BPedit = ({ bp, newOrEdit, defaultEdit, newCancel }) => {
                         placeholder='Systolic'
                         onChange={e => setSystolic(e.target.value)} />/
                     <input
-                        className='BPnumber'
+                        className={`BPnumber ${required[1]}`}
                         type='number'
                         name='diastolic'
                         value={diastolic}
@@ -155,6 +177,7 @@ export const BPedit = ({ bp, newOrEdit, defaultEdit, newCancel }) => {
                         type='date'
                         name='date'
                         value={date}
+                        className={required[2]}
                         required
                         onChange={e => setDate(e.target.value)} />
                 </td>
@@ -163,6 +186,7 @@ export const BPedit = ({ bp, newOrEdit, defaultEdit, newCancel }) => {
                         type='time'
                         name='time'
                         value={time}
+                        className={required[3]}
                         required
                         onChange={e => setTime(e.target.value)} />
                 </td>
@@ -182,15 +206,6 @@ export const BPedit = ({ bp, newOrEdit, defaultEdit, newCancel }) => {
                 </td>
             </tr>
             }
-        
-            {/* 
-                        {status == 201 ?
-                            <p className='success'>BP reading successfully entered.</p> : null}
-                        {status == 400 ?
-                            <p className='failure'>An error occured.</p> : null}
-                     */}
-            
         </>
-
     )
 }

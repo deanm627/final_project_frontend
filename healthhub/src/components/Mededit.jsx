@@ -12,15 +12,17 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
     const [note, setNote] = useState('');
     const [edit, setEdit] = useState(defaultEdit);
     const [neworEdit, setNeworEdit] = useState(newOrEdit);
+    const [required, setRequired] = useState(['default', 'default', 'default', 'default', 'default']);
     
     const token = localStorage.getItem('access_token');
 
     const createNew = async e => {
         e.preventDefault();
-        console.log(name, dose, route, freq, startDate);
+
         if (name === '' | dose === '' | route === '' | freq === '' | startDate === '') {
-            alert('empty fields')
-            return
+            fieldCheck();
+            alert("Please enter all required fields");
+            return;
         }
 
         const bodyFormData = new FormData();
@@ -53,10 +55,11 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
 
     const saveChange = async e => {
         e.preventDefault();
-        
+
         if (name === '' | dose === '' | route === '' | freq === '' | startDate === '') {
-            alert('empty fields')
-            return
+            fieldCheck();
+            alert("Please enter all required fields");
+            return;
         }
 
         const bodyFormData = new FormData();
@@ -121,6 +124,7 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
         setStartDate(med.start_date_num);
         setAssocMedProb(med.assoc_medprob);
         setNote(med.note);
+        setRequired(['default', 'default', 'default', 'default', 'default']);
         if (med.end_date_num) {
             setEndDate(med.end_date_num);
             return
@@ -142,6 +146,21 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
             return
         }
         setEndDate('');
+    }
+
+    const fieldCheck = () => {
+        const fields = [name, dose, route, freq, startDate];
+        const newArr = [];
+        fields.forEach((field, index) => {
+            console.log(field, index)
+            if (field === '') {
+                newArr[index] = 'required';
+            } else {
+                newArr[index] = '';
+            }
+        })
+        console.log(newArr);
+        setRequired(newArr);
     }
 
     return (
@@ -177,6 +196,7 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
                         <input 
                             type='text'
                             name='name'
+                            className={required[0]}
                             value={name}
                             required
                             placeholder='Name'
@@ -186,37 +206,39 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
                         <input
                             type='text'
                             name='dose'
+                            className={required[1]}
                             value={dose}
                             required
                             placeholder='Dose'
                             onChange={e => setDose(e.target.value)} />
                     </td>
                     <td>
-                        <select name='route' value={route} required onChange={e => setRoute(e.target.value)} >
-                            <option>------</option>
-                            <option>Oral</option>
-                            <option>Intramuscular</option>
-                            <option>Other</option>
+                        <select name='route' className={required[2]} value={route} required onChange={e => setRoute(e.target.value)} >
+                            <option value=''>------</option>
+                            <option value='oral'>Oral</option>
+                            <option value='intramuscular'>Intramuscular</option>
+                            <option value='other'>Other</option>
                         </select>
                     </td>
                     <td>
-                        <select name='freq' value={freq} required onChange={e => setFreq(e.target.value)} >
-                            <option>------</option>
-                            <option>Once daily</option>
-                            <option>Once nightly</option>
-                            <option>Twice daily</option>
-                            <option>Every 12 hours</option>
-                            <option>Three times daily</option>
-                            <option>Every 8 hours</option>
-                            <option>Four times daily</option>
-                            <option>Every 6 hours</option>
-                            <option>Other</option>
+                        <select name='freq' className={required[3]} value={freq} required onChange={e => setFreq(e.target.value)} >
+                            <option value=''>------</option>
+                            <option value='once daily'>Once daily</option>
+                            <option value='once nightly'>Once nightly</option>
+                            <option value='twice daily'>Twice daily</option>
+                            <option value='every 12 hours'>Every 12 hours</option>
+                            <option value='three times daily'>Three times daily</option>
+                            <option value='every 8 hours'>Every 8 hours</option>
+                            <option value='four times daily'>Four times daily</option>
+                            <option value='every 6 hours'>Every 6 hours</option>
+                            <option value='other'>Other</option>
                         </select>
                     </td>
                     <td>
                         <input
                             type='date'
                             name='start_date'
+                            className={required[4]}
                             value={startDate}
                             required
                             onChange={e => setStartDate(e.target.value)} />

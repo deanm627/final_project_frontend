@@ -133,6 +133,14 @@ const OuterWrapper = styled.div`
         background-color: #0891b250;
         color: #083344;
     }
+
+    .default {
+        border: 2px solid #3b82f6;
+    }
+
+    .required {
+        border: 2px solid #f43f5e;
+    }
 `
 
 const InnerWrapper = styled.div`
@@ -177,6 +185,8 @@ const InnerWrapper = styled.div`
 
     select {
         margin: 0 3px;
+        border: 1px solid #1f2937;
+        height: 30px;
     }
 
     .dataDisplay {
@@ -351,8 +361,8 @@ export const BPHome = () => {
                     <div className='formDiv'>
                         <form className='form' onSubmit={submitDateRange}>
                             <label>Select data from last: </label>
-                            <select value={rangeNum} onChange={(e) => handleChange(e, 'num')}>
-                                <option>-----</option>
+                            <select value={rangeNum} onChange={(e) => handleChange(e, 'num')} required >
+                                <option value=''>-----</option>
                                 <option value='1'>1</option>
                                 <option value='2'>2</option>
                                 <option value='3'>3</option>
@@ -366,8 +376,8 @@ export const BPHome = () => {
                                 <option value='11'>11</option>
                                 <option value='12'>12</option>
                             </select>
-                            <select value={rangeType} required onChange={(e) => handleChange(e, 'type')}>
-                                <option>-----</option>
+                            <select value={rangeType} onChange={(e) => handleChange(e, 'type')} required >
+                                <option value=''>-----</option>
                                 {rangeNum == 1 
                                     ?
                                     <>

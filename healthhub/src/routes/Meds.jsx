@@ -111,6 +111,7 @@ const OuterWrapper = styled.div`
 
     input, select {
         border: 1px solid #1f2937;
+        height: 30px;
     }
 
     .pages {
@@ -175,6 +176,14 @@ const OuterWrapper = styled.div`
     .showNoteButtonDiv {
         margin-bottom: 10px;
         margin-left: 5px;
+    }
+
+    .default {
+        border: 2px solid #3b82f6;
+    }
+
+    .required {
+        border: 2px solid #f43f5e;
     }
 `
 
@@ -288,14 +297,32 @@ export default function Meds() {
                     </thead>    
                     <tbody>
                         {addNew ?
-                            <MedEdit med={blankMed} newOrEdit={true} defaultEdit={true} newCancel={handleAddNew} statusChange={handleStatus}/>
+                            <MedEdit 
+                                med={blankMed} 
+                                newOrEdit={true} 
+                                defaultEdit={true} 
+                                newCancel={handleAddNew} 
+                                statusChange={handleStatus}/>
                             : null
                         }
                         {currentMeds?.map((med, index) => (
-                            <MedEdit med={med} newOrEdit={false} defaultEdit={false} key={index} hideOrShowNote={showNotes? 'visibleNote' : 'hiddenNote'} statusChange={handleStatus}/>
+                            <MedEdit 
+                                med={med} 
+                                newOrEdit={false} 
+                                defaultEdit={false} 
+                                key={index} 
+                                hideOrShowNote={showNotes? 'visibleNote' : 'hiddenNote'} 
+                                statusChange={handleStatus}/>
                         ))}
                         {oldMeds?.map((med, index) => (
-                            <MedEdit med={med} newOrEdit={false} defaultEdit={false} key={index} hideOrShowMed={showOld? 'visibleOld' : 'hiddenOld'} hideOrShowNote={showNotes? 'visibleNote' : 'hiddenNote'} statusChange={handleStatus}/>
+                            <MedEdit 
+                                med={med} 
+                                newOrEdit={false} 
+                                defaultEdit={false} 
+                                key={index} 
+                                hideOrShowMed={showOld? 'visibleOld' : 'hiddenOld'} 
+                                hideOrShowNote={showNotes? 'visibleNote' : 'hiddenNote'} 
+                                statusChange={handleStatus}/>
                         ))}
                     </tbody>
                     <tfoot>

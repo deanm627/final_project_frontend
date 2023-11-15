@@ -117,6 +117,7 @@ const OuterWrapper = styled.div`
 
     input {
         border: 1px solid #1f2937;
+        height: 30px;
     }
 
     .pages {
@@ -149,13 +150,21 @@ const OuterWrapper = styled.div`
         background-color: #0891b250;
         color: #083344;
     }
+
+    .default {
+        border: 2px solid #3b82f6;
+    }
+
+    .required {
+        border: 2px solid #f43f5e;
+    }
 `
 
 export const BPlist = () => {
     const [listCount, setListCount] = useState('');
     const [nextUrl, setNextUrl] = useState('');
     const [previousUrl, setPreviousUrl] = useState('');
-    const [pageNum, setPageNum] = useState(1);
+    const [pageNum, setPageNum] = useState(0);
     const [pageTotal, setPageTotal] = useState([]);
     const [filter1, setFilter1] = useState('');
     const [filter2, setFilter2] = useState('');
@@ -277,10 +286,10 @@ export const BPlist = () => {
     }
 
     function handleStatus(status) {
-        if (status == 201) {
+        if (status == 201 || status == 200) {
             setStatus(status);
             setTimeout(() => { 
-                window.location.reload();
+                window.location.reload()
             }, 1500);
         } else {
             setStatus(status);
@@ -319,7 +328,9 @@ export const BPlist = () => {
                 </form>
                 <div>
                     {status == 201 ?
-                        <div className='success mb-4 text-emerald-700 text-xl text-center'>BP reading successfully entered.</div> : null}
+                        <div className='success mb-4 text-emerald-700 text-xl text-center'>BP successfully entered.</div> : null}
+                    {status == 200 ?
+                        <div className='success mb-4 text-emerald-700 text-xl text-center'>BP successfully updated.</div> : null}
                     {status == 400 ?
                         <div className='failure mb-4 text-rose-700 text-xl text-center'>An error occured.</div> : null}
                 </div>
@@ -334,11 +345,21 @@ export const BPlist = () => {
                         </thead>
                         <tbody>
                             {addNew ?
-                                <BPedit bp={blankBP} newOrEdit={true} defaultEdit={true} newCancel={handleAddNew} />
+                                <BPedit 
+                                    bp={blankBP} 
+                                    newOrEdit={true} 
+                                    defaultEdit={true} 
+                                    newCancel={handleAddNew}
+                                    statusChange={handleStatus} />
                                 : null
                             }
                             {bps?.map((bp, index) => (
-                                <BPedit key={index} bp={bp} newOrEdit={false} defaultEdit={false} />
+                                <BPedit 
+                                    key={index} 
+                                    bp={bp} 
+                                    newOrEdit={false} 
+                                    defaultEdit={false}
+                                    statusChange={handleStatus} />
                             ))}
                         </tbody>
                         <tfoot>
@@ -350,23 +371,26 @@ export const BPlist = () => {
                             </tr>
                         </tfoot>
                     </table>
-                    <div className='pages'>
-                        <button 
-                            type='submit' 
-                            className='filterButton' 
-                            value={previousUrl}
-                            onClick={(e) => handlePrevious(e)}
-                            disabled={pageNum === 1}
-                            >Previous</button>
-                        <div>Page {pageNum} of {pageTotal} </div>
-                        <button 
-                            type='submit' 
-                            className='filterButton' 
-                            value={nextUrl}
-                            onClick={(e) => handleNext(e)}
-                            disabled={pageNum === pageTotal}
-                            >Next</button>
-                    </div>
+                    {bps.length > 0 ? 
+                        <div className='pages'>
+                            <button 
+                                type='submit' 
+                                className='filterButton' 
+                                value={previousUrl}
+                                onClick={(e) => handlePrevious(e)}
+                                disabled={pageNum === 1}
+                                >Previous</button>
+                            <div>Page {pageNum} of {pageTotal} </div>
+                            <button 
+                                type='submit' 
+                                className='filterButton' 
+                                value={nextUrl}
+                                onClick={(e) => handleNext(e)}
+                                disabled={pageNum === pageTotal}
+                                >Next</button>
+                        </div>
+                        : null
+                    }
             </OuterWrapper>
             <RightNav medprob='bp' />
         </>

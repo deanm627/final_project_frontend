@@ -64,6 +64,11 @@ const NavWrapper = styled.div`
         height: 50px;
         padding: 0 10px;
     }
+
+    .printButton {
+        min-width: 160px;
+        text-align: left;
+    }
 `
 
 export default function Navigation() {
@@ -86,15 +91,12 @@ export default function Navigation() {
                     :   <Link className='navButton' to="/register">Register</Link>
                 }
                 {isAuth 
-                    ?   <button className='navButton' onClick={(e) => print()}>Print</button>
-                    :   null
-                }
-                {isAuth 
                 ?
                     <div className="dropdown">
                         <button className='dropdownButton' type='button'>{username}</button>
                         <div className='dropdownContent'>
                             <Link className='dropdownContentLink' to="/myaccount/">My Account</Link> 
+                            <button className='dropdownContentLink printButton' onClick={(e) => print()}>Print</button>
                             <Link className='dropdownContentLink' to="/logout">Logout</Link> 
                         </div>
                     </div>
