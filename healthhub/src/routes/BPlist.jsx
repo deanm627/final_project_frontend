@@ -328,11 +328,11 @@ export const BPlist = () => {
                 </form>
                 <div>
                     {status == 201 ?
-                        <div className='success mb-4 text-emerald-700 text-xl text-center'>BP successfully entered.</div> : null}
+                        <div className='mb-4 text-emerald-700 text-xl text-center'>BP successfully entered.</div> : null}
                     {status == 200 ?
-                        <div className='success mb-4 text-emerald-700 text-xl text-center'>BP successfully updated.</div> : null}
+                        <div className='mb-4 text-emerald-700 text-xl text-center'>BP successfully updated.</div> : null}
                     {status == 400 ?
-                        <div className='failure mb-4 text-rose-700 text-xl text-center'>An error occured.</div> : null}
+                        <div className='mb-4 text-rose-700 text-xl text-center'>An error occurred.</div> : null}
                 </div>
                     <table>
                         <thead>

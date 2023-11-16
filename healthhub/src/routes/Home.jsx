@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ProgressCircle } from "../components/ProgressCircle";
 import LeftNav from '../components/Nav/LeftNav';
@@ -52,13 +53,30 @@ const OuterWrapper = styled.div`
     }
 
     .bpFormDiv {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.6);
         display: flex;
         justify-content: center;
+        align-items: center;
     }
 `
 
 export default function Home() {
+    const [modal, setModal] = useState(false);
     const firstname = localStorage.getItem('first_name');
+
+    function handleModal(e, refresh) {
+        setModal(!modal)
+        if (refresh) {
+            window.location.reload();
+        };
+    }
 
     return (
         <>
@@ -71,13 +89,16 @@ export default function Home() {
                     <h2>Frequent Activities:</h2>
                 </div>
                 <div className='buttons'>
+                    <button className='button' onClick={(e) => handleModal(e, false)}>Add BP reading</button>
                     <Link to="/medprob/bp" className='button'>Blood Pressure Summary</Link>
                     <Link to="/meds/" className='button'>My Med List</Link>
-                    <button className='button'>Add BP reading</button>
                 </div>
-                <div className='bpFormDiv'>
-                    {/* <BPform /> */}
-                </div>
+                {modal 
+                    ?   <div className='bpFormDiv'>
+                            <BPform handleModal={handleModal} refreshScreen={false} />
+                        </div>
+                    :   null
+                } 
             </OuterWrapper>
         </>
     )

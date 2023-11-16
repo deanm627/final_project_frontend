@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { ProgressCircle } from "../components/ProgressCircle";
 import LeftNav from '../components/Nav/LeftNav';
 import RightNav from '../components/Nav/RightNav';
+import { BPform } from "../components/BPform";
 
 const OuterWrapper = styled.div`
     margin: 20px;
@@ -141,6 +142,20 @@ const OuterWrapper = styled.div`
     .required {
         border: 2px solid #f43f5e;
     }
+
+    .bpFormDiv {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 `
 
 const InnerWrapper = styled.div`
@@ -239,9 +254,9 @@ export const BPHome = () => {
     const [chartData, setChartData] = useState('');
     const [rangeNum, setRangeNum] = useState('');
     const [rangeType, setRangeType] = useState('');
-    const [addNew, setAddNew] = useState(false);
     const [loading, setLoading] = useState(true);
     const [showChart, setShowChart] = useState(false);
+    const [modal, setModal] = useState(false);
 
     const token = localStorage.getItem('access_token');
     const blankBP = {
@@ -300,13 +315,9 @@ export const BPHome = () => {
                             setLoading(false);
                             setShowChart(true);
                         } else {
-                            // some error handling here
+                            alert(response.data);
                         }
                        });
-    }
-
-    function handleAddNew() {
-        setAddNew(!addNew)
     }
 
     function handleChange(e, type) {
@@ -325,6 +336,13 @@ export const BPHome = () => {
         getBPData();
     }
 
+    function handleModal(e, refresh) {
+        setModal(!modal)
+        if (refresh) {
+            window.location.reload();
+        };
+    }
+
     return (
         <>
             <LeftNav currentPage='bp' />
@@ -333,27 +351,14 @@ export const BPHome = () => {
                 <div className="pageLinks">
                     <Link to="/medprob/bplist"><button className="link leftLink">BP readings list</button></Link>
                     {loading ? <ProgressCircle /> : null}
-                    <button className="link newValue" type='button' onClick={handleAddNew}>Enter new BP reading</button>
+                    <button className="link newValue" type='button' onClick={(e) => handleModal(e, false)}>Enter new BP reading</button>
                 </div>
-                <div>
-                    {addNew ? 
-                        <form>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Blood Pressure (mmHg)</th>
-                                        <th>Date</th>
-                                        <th>Time</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <BPedit bp={blankBP} newOrEdit={true} defaultEdit={true} newCancel={handleAddNew} />
-                                </tbody>
-                            </table>
-                        </form>
-                        : null}
-                </div>
+                {modal 
+                    ?   <div className='bpFormDiv'>
+                            <BPform handleModal={handleModal} refreshScreen={true} />
+                        </div>
+                    :   null
+                }
                 <InnerWrapper>
                     <div className='subtitleDiv'>
                         <h3 className='subtitle'>Average Blood Pressure</h3>
@@ -362,7 +367,7 @@ export const BPHome = () => {
                         <form className='form' onSubmit={submitDateRange}>
                             <label>Select data from last: </label>
                             <select value={rangeNum} onChange={(e) => handleChange(e, 'num')} required >
-                                <option value=''>-----</option>
+                                <option value=''></option>
                                 <option value='1'>1</option>
                                 <option value='2'>2</option>
                                 <option value='3'>3</option>
@@ -377,7 +382,7 @@ export const BPHome = () => {
                                 <option value='12'>12</option>
                             </select>
                             <select value={rangeType} onChange={(e) => handleChange(e, 'type')} required >
-                                <option value=''>-----</option>
+                                <option value=''></option>
                                 {rangeNum == 1 
                                     ?
                                     <>

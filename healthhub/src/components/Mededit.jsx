@@ -214,7 +214,7 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
                     </td>
                     <td>
                         <select name='route' className={required[2]} value={route} required onChange={e => setRoute(e.target.value)} >
-                            <option value=''>------</option>
+                            <option value=''></option>
                             <option value='oral'>Oral</option>
                             <option value='intramuscular'>Intramuscular</option>
                             <option value='other'>Other</option>
@@ -222,7 +222,7 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
                     </td>
                     <td>
                         <select name='freq' className={required[3]} value={freq} required onChange={e => setFreq(e.target.value)} >
-                            <option value=''>------</option>
+                            <option value=''></option>
                             <option value='once daily'>Once daily</option>
                             <option value='once nightly'>Once nightly</option>
                             <option value='twice daily'>Twice daily</option>

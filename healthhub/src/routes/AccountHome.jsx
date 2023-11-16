@@ -92,7 +92,6 @@ export default function AccountHome() {
 
     return (
         <>
-            
             {loading
                 ?   <div className="flex justify-center items-center h-screen w-screen"><ProgressCircle /></div>
                 :
