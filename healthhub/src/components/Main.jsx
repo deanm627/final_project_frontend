@@ -20,6 +20,16 @@ const OuterWrapper = styled.div`
         font-size: 3rem;
         font-weight: 100;
     }
+
+    @media (max-width: 900px) {
+        h1 {
+            font-size: 4.8rem;
+        }
+
+        h2 {
+            text-align: center;
+        }
+    }
 `
 
 export default function Main() {

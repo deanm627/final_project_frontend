@@ -19,6 +19,7 @@ axios.interceptors.response.use(resp => resp, async error => {
             axios.defaults.headers.common['Authorization'] = `Bearer ${response.data['access']}`;
             localStorage.setItem('access_token', response.data.access);
             localStorage.setItem('refresh_token', response.data.refresh);
+            window.location.reload();
             return axios(error.config);
         }
     }

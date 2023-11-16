@@ -5,6 +5,12 @@ import styled from 'styled-components';
 const OutletWrapper = styled.div`
     display: flex;
     height: 115vh;
+
+    @media (max-width: 900px) {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+    }
 `
 
 const NavWrapper = styled.div`
@@ -68,6 +74,15 @@ const NavWrapper = styled.div`
     .printButton {
         min-width: 160px;
         text-align: left;
+    }
+
+    @media (max-width: 900px) {
+        display: flex;
+
+        .dropdownContent {
+            position: absolute;
+            right: 0;
+        }
     }
 `
 

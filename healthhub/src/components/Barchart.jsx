@@ -10,6 +10,11 @@ const OuterWrapper = styled.div`
     height: 300px;
     width: 600px;
     box-shadow: 5px 5px 5px gray;
+
+    @media (max-width: 900px) {
+        height: 200px;
+        width: 375px;
+    }
 `
 
 export default function Barchart({dataset, timeInterval}) {

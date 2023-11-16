@@ -38,6 +38,8 @@ const OuterWrapper = styled.div`
         font-weight: 250;
         height: 80px;
         width: 25%;
+        min-width: 325px;
+        max-width: 450px;
         background-color: #f5f5f4;
         margin-bottom: 20px;
         border-radius: 5px;
@@ -64,6 +66,26 @@ const OuterWrapper = styled.div`
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+
+    @media (max-width: 900px) {
+        width: 100%;
+
+        .h1Div {
+            margin-top: 10px;
+            margin-bottom: 0;
+            font-size: 3rem;
+        }
+
+        .h2Div {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .button {
+            width: 75%;
+            font-weight: 400;
+        }
     }
 `
 

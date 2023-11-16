@@ -1,30 +1,6 @@
 import { useState } from 'react';
 import axios from "axios";
-import styled from 'styled-components';
 import { ProgressCircle } from "../components/ProgressCircle";
-
-const FormWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    width: 25%;
-
-    label {
-        margin: 5px 0;
-    }
-
-    button {
-        margin: 15px 0;
-        width: 50%;
-    }
-
-    .success {
-        color: green;
-    }
-
-    .failure {
-        color: red;
-    }
-`
 
 export default function Register() {
     const [firstName, setFirstName] = useState('');

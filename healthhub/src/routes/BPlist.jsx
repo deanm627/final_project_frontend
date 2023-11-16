@@ -91,6 +91,7 @@ const OuterWrapper = styled.div`
     }
 
     .range {
+        display: flex;
         margin: 0 0 25px 0;
         font-size: 1.15rem;
         font-weight: 500;
@@ -157,6 +158,46 @@ const OuterWrapper = styled.div`
 
     .required {
         border: 2px solid #f43f5e;
+    }
+
+    .spinner {
+        display: flex;
+        align-items: center;
+        height: 50%;
+        width: 100%;
+    }
+
+    @media (max-width: 900px) {
+        width: 100%; 
+        margin: 0;
+        padding: 10px;
+
+        h1 {
+            font-size: 2.7rem;
+        }
+
+        .pageLinks {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .range {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .range label {
+            margin-bottom: 8px;
+        }
+
+        .rangeButtons {
+            margin-top: 8px;
+        }
+
+        .spinner {
+            height: 200px;
+        }
     }
 `
 
@@ -303,7 +344,6 @@ export const BPlist = () => {
                 <h1>BP Readings List</h1>
                 <div className="pageLinks">
                     <Link to="/medprob/bp"><button className="link leftLink">BP Summary</button></Link>
-                    {loading ? <ProgressCircle /> : null}
                     <button 
                         type='button' 
                         className="link newValue"
@@ -313,6 +353,7 @@ export const BPlist = () => {
                 </div>
                 <form className='range' onSubmit={(e) => getBPFilteredData(e)}>
                     <label>Select new date range: </label>
+                    <div>
                     <input 
                         className='dateInput' 
                         type='date' required 
@@ -323,8 +364,11 @@ export const BPlist = () => {
                         type='date' required 
                         value={filter2} 
                         onChange={e => setFilter2(e.target.value)} />
-                    <button className='filterButton' type='submit'>Filter</button>
-                    <button className='filterButton' type='submit' onClick={handleReset}>Reset</button>
+                    </div>
+                    <div className="rangeButtons">
+                        <button className='filterButton' type='submit'>Filter</button>
+                        <button className='filterButton' type='submit' onClick={handleReset}>Reset</button>
+                    </div>
                 </form>
                 <div>
                     {status == 201 ?
@@ -334,43 +378,47 @@ export const BPlist = () => {
                     {status == 400 ?
                         <div className='mb-4 text-rose-700 text-xl text-center'>An error occurred.</div> : null}
                 </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Blood Pressure (mmHg)</th>
-                                <th>Date</th>
-                                <th>Time</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {addNew ?
-                                <BPedit 
-                                    bp={blankBP} 
-                                    newOrEdit={true} 
-                                    defaultEdit={true} 
-                                    newCancel={handleAddNew}
-                                    statusChange={handleStatus} />
-                                : null
-                            }
-                            {bps?.map((bp, index) => (
-                                <BPedit 
-                                    key={index} 
-                                    bp={bp} 
-                                    newOrEdit={false} 
-                                    defaultEdit={false}
-                                    statusChange={handleStatus} />
-                            ))}
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>Values: <strong>{bps.length} of {listCount}</strong></td>
-                            </tr>
-                        </tfoot>
-                    </table>
+                {loading  
+                    ?   <div className="spinner flex justify-center items-center h-screen w-screen"><ProgressCircle /></div>
+                    : 
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Blood Pressure (mmHg)</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {addNew ?
+                                    <BPedit 
+                                        bp={blankBP} 
+                                        newOrEdit={true} 
+                                        defaultEdit={true} 
+                                        newCancel={handleAddNew}
+                                        statusChange={handleStatus} />
+                                    : null
+                                }
+                                {bps?.map((bp, index) => (
+                                    <BPedit 
+                                        key={index} 
+                                        bp={bp} 
+                                        newOrEdit={false} 
+                                        defaultEdit={false}
+                                        statusChange={handleStatus} />
+                                ))}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><strong>{bps.length} of {listCount}</strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    }
                     {bps.length > 0 ? 
                         <div className='pages'>
                             <button 

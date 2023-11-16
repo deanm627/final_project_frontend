@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
-import { BPedit } from '../components/BPedit';
 import Barchart from '../components/Barchart';
 import axios from "axios";
 import styled from 'styled-components';
@@ -14,37 +13,6 @@ const OuterWrapper = styled.div`
     display: flex;
     flex-direction: column;
     width: 72%;
-
-    th, tr {
-        border-bottom: 1px solid;
-    }    
-
-    thead {
-        background-color: #f5f5f4;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 10px;
-    }
-
-    tr {
-        height: 40px;
-    }
-
-    th {
-        width: 25%;
-    }
-
-    td {
-        text-align: center;
-    }
-
-    tr:hover {
-        background-color: rgba(255, 255, 255, 0.87);
-        color: black;
-    }
     
     .pageLinks {
         display: flex;
@@ -156,6 +124,16 @@ const OuterWrapper = styled.div`
         justify-content: center;
         align-items: center;
     }
+
+    @media (max-width: 900px) {
+        width: 100%;
+        margin: 10px 0;
+
+        .pageLinks {
+            width: 100%;
+            margin-top: 10px;
+        }
+    }
 `
 
 const InnerWrapper = styled.div`
@@ -241,10 +219,82 @@ const InnerWrapper = styled.div`
         font-weight: 500;
     }
 
+    .form {
+        display: flex;
+    }
+
     select {
         border: 1px solid #1f2937;
     }
 
+    .spinner {
+        margin-top: 200px;
+        height: 100%;
+        width: 100%;
+    }
+
+    @media (max-width: 900px) {
+        .subtitleDiv {
+            margin-bottom: 5px;
+        }
+    
+        h3.subtitle {
+            font-size: 1.8rem;
+        }
+
+        .form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .formDiv {
+            margin-bottom: 5px;
+            margin-top: 0;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .formSelect {
+            display: flex;
+            justify-content: center;
+        }
+
+        .filterButtonDiv {
+            display: flex;
+            justify-content: center;
+            margin-top: 8px;
+            margin-bottom: 8px;
+        }
+
+        .dataDisplay {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+        }
+
+        .display {
+            margin: 8px;
+            margin-top: 15px;
+        }
+        
+        .caption {
+            font-size: 0.9rem;
+        }
+
+        .circle.am {
+            margin-bottom: 8px;
+        }
+
+        .spinner {
+            height: 200px;
+        }
+    }
+
+    
 `
 
 export const BPHome = () => {
@@ -350,7 +400,6 @@ export const BPHome = () => {
                 <h1>BP Summary</h1>
                 <div className="pageLinks">
                     <Link to="/medprob/bplist"><button className="link leftLink">BP readings list</button></Link>
-                    {loading ? <ProgressCircle /> : null}
                     <button className="link newValue" type='button' onClick={(e) => handleModal(e, false)}>Enter new BP reading</button>
                 </div>
                 {modal 
@@ -360,80 +409,90 @@ export const BPHome = () => {
                     :   null
                 }
                 <InnerWrapper>
-                    <div className='subtitleDiv'>
-                        <h3 className='subtitle'>Average Blood Pressure</h3>
-                    </div>
-                    <div className='formDiv'>
-                        <form className='form' onSubmit={submitDateRange}>
-                            <label>Select data from last: </label>
-                            <select value={rangeNum} onChange={(e) => handleChange(e, 'num')} required >
-                                <option value=''></option>
-                                <option value='1'>1</option>
-                                <option value='2'>2</option>
-                                <option value='3'>3</option>
-                                <option value='4'>4</option>
-                                <option value='5'>5</option>
-                                <option value='6'>6</option>
-                                <option value='7'>7</option>
-                                <option value='8'>8</option>
-                                <option value='9'>9</option>
-                                <option value='10'>10</option>
-                                <option value='11'>11</option>
-                                <option value='12'>12</option>
-                            </select>
-                            <select value={rangeType} onChange={(e) => handleChange(e, 'type')} required >
-                                <option value=''></option>
-                                {rangeNum == 1 
-                                    ?
-                                    <>
-                                        <option value='Day'>day</option>
-                                        <option value='Week'>week</option>
-                                        <option value='Month'>month</option>
-                                        <option value='Year'>year</option>
-                                    </>
-                                    :   
-                                    <>
-                                        <option value='Day'>days</option>
-                                        <option value='Week'>weeks</option>
-                                        <option value='Month'>months</option>
-                                        <option value='Year'>years</option>
-                                    </>
-                                }
-                                
-                            </select>
-                            <button className='filterButton' type='submit'>Submit</button>
-                            <button className='filterButton' type='submit' onClick={handleReset}>Reset</button>
-                        </form>
-                    </div> 
-                    <div className='dataDisplay'>
-                        <div className='chartsAMPM'>
-                            <div>
-                                <h3>AM</h3>
-                                <div className='circle am'>
-                                    <div className='border-b-4 border-gray-950 mt-12'>{bpAvgAM.sys_avg}</div>
-                                    <div>{bpAvgAM.dia_avg}</div>
+                    {loading  
+                        ?   <div className="spinner flex justify-center items-center h-screen w-screen"><ProgressCircle /></div>
+                        : 
+                        <>
+                            <div className='subtitleDiv'>
+                                <h3 className='subtitle'>Average Blood Pressure</h3>
+                            </div>
+                            <div className='formDiv'>
+                                <form className='form' onSubmit={submitDateRange}>
+                                    <label>Select data from last: </label>
+                                    <div className='formSelect'>
+                                        <select value={rangeNum} onChange={(e) => handleChange(e, 'num')} required >
+                                            <option value=''></option>
+                                            <option value='1'>1</option>
+                                            <option value='2'>2</option>
+                                            <option value='3'>3</option>
+                                            <option value='4'>4</option>
+                                            <option value='5'>5</option>
+                                            <option value='6'>6</option>
+                                            <option value='7'>7</option>
+                                            <option value='8'>8</option>
+                                            <option value='9'>9</option>
+                                            <option value='10'>10</option>
+                                            <option value='11'>11</option>
+                                            <option value='12'>12</option>
+                                        </select>
+                                        <select value={rangeType} onChange={(e) => handleChange(e, 'type')} required >
+                                            <option value=''></option>
+                                            {rangeNum == 1 
+                                                ?
+                                                <>
+                                                    <option value='Day'>day</option>
+                                                    <option value='Week'>week</option>
+                                                    <option value='Month'>month</option>
+                                                    <option value='Year'>year</option>
+                                                </>
+                                                :   
+                                                <>
+                                                    <option value='Day'>days</option>
+                                                    <option value='Week'>weeks</option>
+                                                    <option value='Month'>months</option>
+                                                    <option value='Year'>years</option>
+                                                </>
+                                            }
+                                            
+                                        </select>
+                                    </div>
+                                    <div className='filterButtonDiv'>
+                                        <button className='filterButton' type='submit'>Submit</button>
+                                        <button className='filterButton' type='submit' onClick={handleReset}>Reset</button>
+                                    </div> 
+                                </form>
+                            </div> 
+                            <div className='dataDisplay'>
+                                <div className='chartsAMPM'>
+                                    <div>
+                                        <h3>AM</h3>
+                                        <div className='circle am'>
+                                            <div className='border-b-4 border-gray-950 mt-12'>{bpAvgAM.sys_avg}</div>
+                                            <div>{bpAvgAM.dia_avg}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="chartMain">
+                                    <div className="display">
+                                        <div className='valueSys border-b-8 border-gray-950'>{bpAvgAll.sys_avg}</div>
+                                        <div className='valueDia '>{bpAvgAll.dia_avg}</div>
+                                    </div>
+                                    <div className="data">
+                                        <p className='caption'>mmHg. Calculated from <strong>{bpAvgAll.count}</strong> values since <strong>{bpAvgAll.first_date}</strong></p>
+                                    </div>
+                                </div>
+                                <div className='chartsAMPM'>
+                                    <div>
+                                        <h3>PM</h3>
+                                        <div className='circle pm'>
+                                            <div className='border-b-4 border-gray-950 mt-12'>{bpAvgPM.sys_avg}</div>
+                                            <div>{bpAvgPM.dia_avg}</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="chartMain">
-                            <div className="display">
-                                <div className='valueSys border-b-8 border-gray-950'>{bpAvgAll.sys_avg}</div>
-                                <div className='valueDia '>{bpAvgAll.dia_avg}</div>
-                            </div>
-                            <div className="data">
-                                <p>mmHg. Calculated from <strong>{bpAvgAll.count}</strong> values since <strong>{bpAvgAll.first_date}</strong></p>
-                            </div>
-                        </div>
-                        <div className='chartsAMPM'>
-                            <div>
-                                <h3>PM</h3>
-                                <div className='circle pm'>
-                                    <div className='border-b-4 border-gray-950 mt-12'>{bpAvgPM.sys_avg}</div>
-                                    <div>{bpAvgPM.dia_avg}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                        </>
+                    }
                 </InnerWrapper>
                 {showChart? <Barchart dataset={chartData} timeInterval={rangeType} /> : null }
             </OuterWrapper>

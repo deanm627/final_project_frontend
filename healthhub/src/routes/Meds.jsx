@@ -185,6 +185,31 @@ const OuterWrapper = styled.div`
     .required {
         border: 2px solid #f43f5e;
     }
+
+    .spinner {
+        display: flex;
+        align-items: center;
+        height: 50%;
+        width: 100%;
+    }
+
+    
+    @media (max-width: 900px) {
+        width: 100%; 
+        margin: 0;
+
+        h1 {
+            font-size: 2.7rem;
+        }
+
+        .pageLinks {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .spinner {
+            height: 200px;
+        }
 `
 
 export default function Meds() {
@@ -260,7 +285,6 @@ export default function Meds() {
                     ?   <button className='link leftLink' onClick={(e) => setShowOld(!showOld)}>Hide Prior Meds</button>
                     :   <button className='link leftLink' onClick={(e) => setShowOld(!showOld)}>Show Prior Meds</button>
                     }
-                    {loading ? <ProgressCircle /> : null}
                     <button 
                         type='button' 
                         className="link newValue"
@@ -282,62 +306,66 @@ export default function Meds() {
                     {status == 400 ?
                         <div className='mb-4 text-rose-700 text-xl text-center'>An error occurred.</div> : null}
                 </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Dose</th>
-                            <th>Route</th>
-                            <th>Frequency</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
-                            <th>Associated Medical Problems</th>
-                            <th></th>
-                        </tr>
-                    </thead>    
-                    <tbody>
-                        {addNew ?
-                            <MedEdit 
-                                med={blankMed} 
-                                newOrEdit={true} 
-                                defaultEdit={true} 
-                                newCancel={handleAddNew} 
-                                statusChange={handleStatus}/>
-                            : null
-                        }
-                        {currentMeds?.map((med, index) => (
-                            <MedEdit 
-                                med={med} 
-                                newOrEdit={false} 
-                                defaultEdit={false} 
-                                key={index} 
-                                hideOrShowNote={showNotes? 'visibleNote' : 'hiddenNote'} 
-                                statusChange={handleStatus}/>
-                        ))}
-                        {oldMeds?.map((med, index) => (
-                            <MedEdit 
-                                med={med} 
-                                newOrEdit={false} 
-                                defaultEdit={false} 
-                                key={index} 
-                                hideOrShowMed={showOld? 'visibleOld' : 'hiddenOld'} 
-                                hideOrShowNote={showNotes? 'visibleNote' : 'hiddenNote'} 
-                                statusChange={handleStatus}/>
-                        ))}
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>Values: <strong>{showOld? (oldMeds.length + currentMeds.length) : currentMeds.length}</strong></td>
-                        </tr>
-                    </tfoot>
-                </table>
+                {loading  
+                        ?   <div className="spinner flex justify-center items-center h-screen w-screen"><ProgressCircle /></div>
+                        : 
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Dose</th>
+                                        <th>Route</th>
+                                        <th>Frequency</th>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                        <th>Associated Medical Problems</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>    
+                                <tbody>
+                                    {addNew ?
+                                        <MedEdit 
+                                            med={blankMed} 
+                                            newOrEdit={true} 
+                                            defaultEdit={true} 
+                                            newCancel={handleAddNew} 
+                                            statusChange={handleStatus}/>
+                                        : null
+                                    }
+                                    {currentMeds?.map((med, index) => (
+                                        <MedEdit 
+                                            med={med} 
+                                            newOrEdit={false} 
+                                            defaultEdit={false} 
+                                            key={index} 
+                                            hideOrShowNote={showNotes? 'visibleNote' : 'hiddenNote'} 
+                                            statusChange={handleStatus}/>
+                                    ))}
+                                    {oldMeds?.map((med, index) => (
+                                        <MedEdit 
+                                            med={med} 
+                                            newOrEdit={false} 
+                                            defaultEdit={false} 
+                                            key={index} 
+                                            hideOrShowMed={showOld? 'visibleOld' : 'hiddenOld'} 
+                                            hideOrShowNote={showNotes? 'visibleNote' : 'hiddenNote'} 
+                                            statusChange={handleStatus}/>
+                                    ))}
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>Values: <strong>{showOld? (oldMeds.length + currentMeds.length) : currentMeds.length}</strong></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                }
             </OuterWrapper>
         </>
     )

@@ -40,9 +40,20 @@ const NavWrapper = styled.div`
         padding: 5px;
         border-radius: 5px;
         background-color: #f5f5f4;
-    
-    ProgressTriangle {
-        background-color: blue;
+    }
+
+    @media (max-width: 900px) {
+        display: flex;
+        flex-direction: column-reverse;
+        width: 100%;
+        border: none;
+        margin-top: 8px;
+
+        .manage {
+            margin-bottom: 8px;
+            font-size: 1rem;
+            font-weight: 400;
+        }
     }
 `
 
@@ -75,7 +86,6 @@ export default function RightNav({medprob}) {
 
     return (
         <NavWrapper>
-            <div>
                 <div className='manage'>
                     <Link to="/meds/" className='manageLink'>Manage</Link>
                 </div>
@@ -90,7 +100,6 @@ export default function RightNav({medprob}) {
                         : null
                     }
                 </details>
-            </div>
         </NavWrapper>
     )   
 }

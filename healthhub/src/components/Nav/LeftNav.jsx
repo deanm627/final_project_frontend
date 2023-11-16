@@ -38,6 +38,25 @@ const NavWrapper = styled.div`
         margin-bottom: 10px;
         padding-bottom: 7px;
     }
+
+    @media (max-width: 900px) {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        border: none;
+
+        .home {
+            display: none;
+        }
+
+        .primary {
+            font-size: 1.2rem;
+        }
+
+        .secondary {
+            font-size: 1.1rem;
+        }
+    }
 `
 
 export default function LeftNav({currentPage}) {
