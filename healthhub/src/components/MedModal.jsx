@@ -1,5 +1,3 @@
-
-
 export const MedModal = ({options, handleClick, handleSelect}) => {
     return (
         <td className='flex flex-col items-start bg-white border-2 border-gray-300 shadow-md rounded px-8 pt-6 pb-8 mb-4'>
