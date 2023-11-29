@@ -238,7 +238,6 @@ export default function Meds() {
     const blankMed = {
         'name': '',
         'dose': '',
-        'route': '',
         'frequency': '',
         'start_date_num': '',
         'end_date_num': '',
@@ -327,7 +326,6 @@ export default function Meds() {
                                     <tr>
                                         <th>Name</th>
                                         <th>Dose</th>
-                                        <th>Route</th>
                                         <th>Frequency</th>
                                         <th>Start Date</th>
                                         <th>End Date</th>
@@ -367,7 +365,6 @@ export default function Meds() {
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td></td>
                                         <td></td>
                                         <td></td>
                                         <td></td>

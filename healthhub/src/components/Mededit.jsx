@@ -5,7 +5,6 @@ import { MedModal } from './MedModal';
 export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed, hideOrShowNote, statusChange }) => {
     const [name, setName] = useState('');
     const [dose, setDose] = useState('');
-    const [route, setRoute] = useState('');
     const [freq, setFreq] = useState('');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
@@ -13,16 +12,18 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
     const [note, setNote] = useState('');
     const [edit, setEdit] = useState(defaultEdit);
     const [neworEdit, setNeworEdit] = useState(newOrEdit);
-    const [required, setRequired] = useState(['default', 'default', 'default', 'default', 'default']);
+    const [required, setRequired] = useState(['default', 'default', 'default', 'default']);
     const [modal, setModal] = useState(false);
-    const [results, setResults] = useState([]);
+    const [medOptions, setMedOptions] = useState([]);
+    const [medDoseOptions, setMedDoseOptions] = useState([]);
+    const [selectedMedDoseOptions, setSelectedMedDoseOptions] = useState([]);
     
     const token = localStorage.getItem('access_token');
 
     const createNew = async e => {
         e.preventDefault();
 
-        if (name === '' | dose === '' | route === '' | freq === '' | startDate === '') {
+        if (name === '' | dose === '' | freq === '' | startDate === '') {
             fieldCheck();
             alert("Please enter all required fields");
             return;
@@ -31,7 +32,6 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
         const bodyFormData = new FormData();
         bodyFormData.append('name', name);
         bodyFormData.append('dose', dose);
-        bodyFormData.append('route', route);
         bodyFormData.append('freq', freq);
         bodyFormData.append('start_date_num', startDate);
         bodyFormData.append('start_date_str', startDate);
@@ -59,7 +59,7 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
     const saveChange = async e => {
         e.preventDefault();
 
-        if (name === '' | dose === '' | route === '' | freq === '' | startDate === '') {
+        if (name === '' | dose === '' | freq === '' | startDate === '') {
             fieldCheck();
             alert("Please enter all required fields");
             return;
@@ -68,7 +68,6 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
         const bodyFormData = new FormData();
         bodyFormData.append('name', name);
         bodyFormData.append('dose', dose);
-        bodyFormData.append('route', route);
         bodyFormData.append('freq', freq);
         bodyFormData.append('start_date_num', startDate);
         bodyFormData.append('start_date_str', startDate);
@@ -122,7 +121,6 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
         setEdit(false);
         setName(med.name);
         setDose(med.dose);
-        setRoute(med.route);
         setFreq(med.freq);
         setStartDate(med.start_date_num);
         setAssocMedProb(med.assoc_medprob);
@@ -139,7 +137,6 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
         setEdit(true);
         setName(med.name);
         setDose(med.dose);
-        setRoute(med.route);
         setFreq(med.freq);
         setStartDate(med.start_date_num);
         setAssocMedProb(med.assoc_medprob);
@@ -152,7 +149,7 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
     }
 
     const fieldCheck = () => {
-        const fields = [name, dose, route, freq, startDate];
+        const fields = [name, dose, freq, startDate];
         const newArr = [];
         fields.forEach((field, index) => {
             console.log(field, index)
@@ -171,10 +168,8 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
             await axios.get(`https://clinicaltables.nlm.nih.gov/api/rxterms/v3/search?terms=${name}&ef=STRENGTHS_AND_FORMS`)
                 .then(response => {
                     console.log(response);
-                    setResults(response.data[1]);
-                    // data = response.json();
-                    // console.log(data);
-                    // setResults(data);
+                    setMedOptions(response.data[1]);
+                    setMedDoseOptions(response.data[2]['STRENGTHS_AND_FORMS']);
             });
         } 
         catch (e) {
@@ -187,6 +182,14 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
         getMedResults();
     }
 
+    function handleMedSelect(e, index) {
+        const selected = medDoseOptions[index];
+        setSelectedMedDoseOptions(selected);
+        const selectedMed = medOptions[index];
+        setName(selectedMed);
+        setModal(!modal);
+    }
+
     return (
         <>
             {!edit 
@@ -195,7 +198,6 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
                 <tr className={`displayRow ${hideOrShowMed}`}>
                     <td>{med.name}</td>
                     <td>{med.dose}</td>
-                    <td>{med.route}</td>
                     <td>{med.freq}</td>
                     <td>{med.start_date_str}</td>
                     <td>{med.end_date_str}</td>
@@ -217,7 +219,7 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
             <>
                 {modal ?
                     <tr className='medModalDiv'>
-                        <MedModal handleClick={handleModal} options={results}/>
+                        <MedModal handleClick={handleModal} handleSelect={handleMedSelect} options={medOptions}/>
                     </tr>
                     : null
                 }
@@ -229,30 +231,20 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
                             className={required[0]}
                             value={name}
                             required
-                            placeholder='Name'
+                            placeholder='Type then search'
                             onChange={e => setName(e.target.value)} />
-                            <button className='flex items-center hover:bg-stone-100' type='button' onClick={handleModal}><i className="material-icons">search</i></button>
+                            <button className='flex items-center bg-white border-2 border-gray-800 rounded hover:bg-emerald-300' type='button' onClick={handleModal}><i className="material-icons">search</i></button>
                     </td>
                     <td>
-                        <input
-                            type='text'
-                            name='dose'
-                            className={required[1]}
-                            value={dose}
-                            required
-                            placeholder='Dose'
-                            onChange={e => setDose(e.target.value)} />
-                    </td>
-                    <td>
-                        <select name='route' className={required[2]} value={route} required onChange={e => setRoute(e.target.value)} >
-                            <option value=''></option>
-                            <option value='oral'>Oral</option>
-                            <option value='intramuscular'>Intramuscular</option>
-                            <option value='other'>Other</option>
+                        <select name='dose' className={required[1]} value={dose} required onChange={e => setDose(e.target.value)} >
+                            <option value=''>Select</option>
+                            {selectedMedDoseOptions?.map((dose, index) => (
+                                <option key={index} value={dose}>{dose}</option>
+                            ))}
                         </select>
                     </td>
                     <td>
-                        <select name='freq' className={required[3]} value={freq} required onChange={e => setFreq(e.target.value)} >
+                        <select name='freq' className={required[2]} value={freq} required onChange={e => setFreq(e.target.value)} >
                             <option value=''></option>
                             <option value='once daily'>Once daily</option>
                             <option value='once nightly'>Once nightly</option>
@@ -269,7 +261,7 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
                         <input
                             type='date'
                             name='start_date'
-                            className={required[4]}
+                            className={required[3]}
                             value={startDate}
                             required
                             onChange={e => setStartDate(e.target.value)} />
