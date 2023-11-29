@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from "axios";
+import { MedModal } from './MedModal';
 
 export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed, hideOrShowNote, statusChange }) => {
     const [name, setName] = useState('');
@@ -13,6 +14,8 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
     const [edit, setEdit] = useState(defaultEdit);
     const [neworEdit, setNeworEdit] = useState(newOrEdit);
     const [required, setRequired] = useState(['default', 'default', 'default', 'default', 'default']);
+    const [modal, setModal] = useState(false);
+    const [results, setResults] = useState([]);
     
     const token = localStorage.getItem('access_token');
 
@@ -163,6 +166,27 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
         setRequired(newArr);
     }
 
+    async function getMedResults() {
+        try {
+            await axios.get(`https://clinicaltables.nlm.nih.gov/api/rxterms/v3/search?terms=${name}&ef=STRENGTHS_AND_FORMS`)
+                .then(response => {
+                    console.log(response);
+                    setResults(response.data[1]);
+                    // data = response.json();
+                    // console.log(data);
+                    // setResults(data);
+            });
+        } 
+        catch (e) {
+            console.error(e)
+        }
+    }
+
+    function handleModal() {
+        setModal(!modal);
+        getMedResults();
+    }
+
     return (
         <>
             {!edit 
@@ -191,8 +215,14 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
             </>
             : 
             <>
+                {modal ?
+                    <tr className='medModalDiv'>
+                        <MedModal handleClick={handleModal} options={results}/>
+                    </tr>
+                    : null
+                }
                 <tr className='editRow'>
-                    <td>
+                    <td className='flex items-center'>
                         <input 
                             type='text'
                             name='name'
@@ -201,6 +231,7 @@ export const MedEdit = ({ med, newOrEdit, defaultEdit, newCancel, hideOrShowMed,
                             required
                             placeholder='Name'
                             onChange={e => setName(e.target.value)} />
+                            <button className='flex items-center hover:bg-stone-100' type='button' onClick={handleModal}><i className="material-icons">search</i></button>
                     </td>
                     <td>
                         <input

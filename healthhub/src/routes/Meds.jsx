@@ -193,6 +193,19 @@ const OuterWrapper = styled.div`
         width: 100%;
     }
 
+    .medModalDiv {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
     
     @media (max-width: 900px) {
         width: 100%; 

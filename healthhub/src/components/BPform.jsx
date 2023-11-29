@@ -74,6 +74,7 @@ export const BPform = ({handleModal, refreshScreen}) => {
                                     name='systolic'
                                     value={systolic}
                                     required
+                                    min='20'
                                     max='300'
                                     onChange={e => setSystolic(e.target.value)} />
                             </div>
@@ -85,6 +86,7 @@ export const BPform = ({handleModal, refreshScreen}) => {
                                     name='diastolic'
                                     value={diastolic}
                                     required
+                                    min='20'
                                     max='300'
                                     onChange={e => setDiastolic(e.target.value)} />
                             </div>

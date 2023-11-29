@@ -159,6 +159,7 @@ export const BPedit = ({ bp, newOrEdit, defaultEdit, newCancel, statusChange }) 
                         name='systolic'
                         value={systolic}
                         required
+                        min='20'
                         max='300'
                         placeholder='Systolic'
                         onChange={e => setSystolic(e.target.value)} />/
@@ -168,6 +169,7 @@ export const BPedit = ({ bp, newOrEdit, defaultEdit, newCancel, statusChange }) 
                         name='diastolic'
                         value={diastolic}
                         required
+                        min='20'
                         max='300'
                         placeholder='Diastolic'
                         onChange={e => setDiastolic(e.target.value)} />
